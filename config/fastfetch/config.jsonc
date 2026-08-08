@@ -1,0 +1,74 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "none"
+  },
+  "display": {
+    "separator": "  "
+  },
+  "modules": [
+    {
+      "type": "custom",
+      "format": "  ________ __ __ _____________  "
+    },
+    {
+      "type": "custom",
+      "format": " /  ___/  |  \\  |  \\____ \\__  \\ "
+    },
+    {
+      "type": "custom",
+      "format": " \\___ \\|  |  /  |  /  |_> > __ \\_"
+    },
+    {
+      "type": "custom",
+      "format": "/____  >____/|____/|   __(____  /"
+    },
+    {
+      "type": "custom",
+      "format": "     \\/            |__|       \\/ "
+    },
+    "break",
+    {
+      "type": "custom",
+      "format": "┌─── System Information ───┐"
+    },
+    {
+      "type": "os",
+      "key": "│  distro "
+    },
+    {
+      "type": "uptime",
+      "key": "│ 󱎫 uptime "
+    },
+    {
+      "type": "shell",
+      "key": "│  shell  "
+    },
+    {
+      "type": "terminal",
+      "key": "│  term   "
+    },
+    {
+      "type": "cpu",
+      "key": "│  cpu    "
+    },
+    {
+      "type": "gpu",
+      "key": "│ 󰢮 gpu    "
+    },
+    {
+      "type": "memory",
+      "key": "│ 󰍛 memory "
+    },
+    {
+      "type": "disk",
+      "key": "│ 󰋊 disk   "
+    },
+    {
+      "type": "custom",
+      "format": "└──────────────────────────┘"
+    },
+    "break",
+    "colors"
+  ]
+}

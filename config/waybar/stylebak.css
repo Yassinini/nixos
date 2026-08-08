@@ -1,0 +1,51 @@
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-bottom: 1px solid #313244;
+}
+
+#custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4, #custom-ws5 {
+    padding: 0 8px;
+    color: #6c7086;
+}
+
+#custom-ws1.active,
+#custom-ws2.active,
+#custom-ws3.active,
+#custom-ws4.active,
+#custom-ws5.active {
+    color: #cdd6f4;
+    border-bottom: 2px solid #89b4fa;
+}
+
+#clock,
+#network,
+#bluetooth,
+#pulseaudio,
+#battery,
+#tray {
+    padding: 0 10px;
+    color: #cdd6f4;
+}
+
+#battery.warning {
+    color: #f9e2af;
+}
+
+#battery.critical {
+    color: #f38ba8;
+}
+
+#network.disconnected {
+    color: #6c7086;
+}
+
+#bluetooth.disabled {
+    color: #6c7086;
+}

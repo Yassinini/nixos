@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# 1. CD into the folder
+cd ~/Documents/yurrr
+
+# 2. Run nix-shell and feed the next steps directly into it
+nix-shell <<-EOF
+  # 3. Open VS Code via the code . command
+  code .
+  
+  # Keep the shell alive so VS Code can inherit the environment safely
+  exec bash
+EOF

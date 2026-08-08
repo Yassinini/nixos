@@ -1,0 +1,89 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "spacing": 4,
+
+    "modules-left": ["custom/ws1", "custom/ws2", "custom/ws3", "custom/ws4", "custom/ws5"],
+    "modules-center": ["custom/ycal"],
+    "modules-right": ["network", "bluetooth", "pulseaudio", "battery", "tray"],
+
+    "custom/ws1": {
+        "exec": "~/.config/waybar/ws-status.sh 1",
+        "return-type": "json",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace = 1})'"
+    },
+    "custom/ws2": {
+        "exec": "~/.config/waybar/ws-status.sh 2",
+        "return-type": "json",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace = 2})'"
+    },
+    "custom/ws3": {
+        "exec": "~/.config/waybar/ws-status.sh 3",
+        "return-type": "json",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace = 3})'"
+    },
+    "custom/ws4": {
+        "exec": "~/.config/waybar/ws-status.sh 4",
+        "return-type": "json",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace = 4})'"
+    },
+    "custom/ws5": {
+        "exec": "~/.config/waybar/ws-status.sh 5",
+        "return-type": "json",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace = 5})'"
+    },
+
+    "custom/ycal": {
+        "exec": "/home/suupatruupa/.config/waybar-ycal/bar.py",
+        "on-click": "/home/suupatruupa/.config/waybar-ycal/toggle.sh",
+        "interval": 60,
+        "return-type": "json"
+    },
+
+    "network": {
+        "format-wifi": "\uf1eb",
+        "format-ethernet": "\uf796",
+        "format-disconnected": "\uf071",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)",
+        "tooltip-format-disconnected": "Disconnected",
+        "on-click": "nm-connection-editor"
+    },
+
+    "bluetooth": {
+        "format": "\uf293",
+        "format-disabled": "\uf294",
+        "format-connected": "\uf293",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        "on-click": "blueman-manager"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "\uf6a9 0%",
+        "format-icons": {
+            "default": ["\uf026", "\uf027", "\uf028"]
+        },
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+        "tooltip-format": "{desc}"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}%",
+        "format-charging": "{capacity}% \uf0e7",
+        "tooltip-format": "{time}"
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    }
+}

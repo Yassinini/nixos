@@ -1,0 +1,77 @@
+@import url("colors.css");
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+}
+
+.control-center {
+    background-color: @background;
+    color: @foreground;
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.widget-buttons-grid {
+    padding: 0;
+}
+
+.widget-buttons-grid button {
+    background-color: @background-alt;
+    background-image: none;
+    color: @foreground;
+    min-width: 70px;
+    min-height: 70px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    text-shadow: none;
+    font-size: 20px;
+    margin: 6px;
+}
+
+.widget-buttons-grid button:hover,
+.widget-buttons-grid button:focus,
+.widget-buttons-grid button:active,
+.widget-buttons-grid button:checked,
+.widget-buttons-grid button:focus:hover {
+    background-color: @background-alt;
+    background-image: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.widget-volume, .widget-backlight {
+    background-color: @background-alt;
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin: 8px 0;
+}
+
+.widget-volume trough, .widget-backlight trough {
+    background-color: @background;
+    border-radius: 10px;
+    min-height: 8px;
+}
+
+.widget-volume highlight, .widget-backlight highlight {
+    background-color: @foreground;
+    border-radius: 10px;
+}
+
+.widget-volume slider, .widget-backlight slider {
+    background-color: @foreground;
+    border-radius: 50%;
+    min-width: 16px;
+    min-height: 16px;
+}
+
+.notification-group,
+.blank-window {
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+}

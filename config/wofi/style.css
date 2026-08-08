@@ -1,0 +1,19 @@
+window {
+    background-color: #121212;
+    border: none;
+}
+
+#entry {
+    background-color: #121212;
+    color: #ffffff;
+    padding: 10px;
+}
+
+#entry:selected {
+    background-color: #333333;
+}
+
+#text {
+    font-family: sans-serif;
+    font-size: 14px;
+}

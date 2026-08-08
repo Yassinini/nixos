@@ -1,0 +1,25 @@
+{
+    "control-center-width": 340,
+    "control-center-height": 200,
+    "control-center-margin-top": 8,
+    "control-center-margin-right": 8,
+    "control-center-positionX": "right",
+    "control-center-positionY": "top",
+    "widgets": [
+        "buttons-grid",
+        "volume",
+        "backlight"
+    ],
+    "widget-config": {
+        "buttons-grid": {
+            "actions": [
+                { "label": "󰖩", "command": "~/.config/swaync/scripts/toggle-wifi.sh" },
+                { "label": "󰂯", "command": "~/.config/swaync/scripts/toggle-bluetooth.sh" },
+                { "label": "󰍬", "command": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle" },
+                { "label": "󰒓", "command": "~/.config/swaync/scripts/settings-menu.sh" }
+            ]
+        },
+        "volume": { "label": "󰕾" },
+        "backlight": { "label": "󰃟", "device": "acpi_video0" }
+    }
+}
