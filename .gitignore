@@ -1,0 +1,6 @@
+hosts/*/hardware-configuration.nix
+config/spotify-player/*.token
+config/spotify-player/*cache*
+config/spicetify/*cache*
+result
+result-*
