@@ -153,12 +153,23 @@ home.sessionVariables = {
   QT_STYLE_OVERRIDE = "adwaita-dark";
   GI_TYPELIB_PATH = "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0";
 };
+programs.fish.functions.com = ''
+  set -l msg $argv
+  if test -z "$msg"
+    set msg "update"
+  end
+  cd ~/nixos
+  git add -A
+  git commit -m "$msg"
+  git push
+'';
 
 programs.fish = {
   enable = true;
 
   interactiveShellInit = ''
-    set -gx GI_TYPELIB_PATH "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0"
+  cd ~/nixos  
+  set -gx GI_TYPELIB_PATH "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0"
 
     set fish_greeting
 
@@ -206,6 +217,7 @@ home.shellAliases = {
   scr  = "gpu-screen-recorder -w screen -f 60 -a \"default_output\" -o ~/Videos/Recordings/recording_\$(date +%Y-%m-%d_%H-%M-%S).mp4";
     scrH = "gpu-screen-recorder -w screen -f 60 -a \"default_output\" -q very_high -o ~/Videos/Recordings/recording_\$(date +%Y-%m-%d_%H-%M-%S).mp4";
   yup = "~/.local/bin/yeup";
+  rebuild = "sudo nixos-rebuild switch --flake ~/nixos#nixos";
 };
 
 programs.bash = {
