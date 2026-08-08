@@ -209,6 +209,14 @@ programs.fish = {
     end
   '';
 };
+programs.fish.functions.sync = ''
+  bash ~/.nixos/scripts/collect-dotfiles.sh
+  sudo nixos-rebuild switch --flake ~/.nixos#nixos
+  cd ~/.nixos
+  git add -A
+  git commit -m "sync $(date '+%Y-%m-%d %H:%M')"
+  git push
+'';
 
 
 home.shellAliases = {
@@ -218,6 +226,7 @@ home.shellAliases = {
     scrH = "gpu-screen-recorder -w screen -f 60 -a \"default_output\" -q very_high -o ~/Videos/Recordings/recording_\$(date +%Y-%m-%d_%H-%M-%S).mp4";
   yup = "~/.local/bin/yeup";
   rebuild = "sudo nixos-rebuild switch --flake ~/.nixos#nixos";
+  bk = "cd ~/.nixos";
 };
 
 programs.bash = {
