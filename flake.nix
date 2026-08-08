@@ -96,13 +96,13 @@
         inherit system;
         specialArgs = { inherit inputs hyprglass; };
         modules = [
-          ./hosts/legion5/configuration.nix
+          ./configuration.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs hyprglass; };
-            home-manager.users.suupatruupa = import ./home/home.nix;
+            home-manager.users.suupatruupa = import ./home.nix;
           }
         ];
       };
