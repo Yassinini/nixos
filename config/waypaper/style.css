@@ -1,0 +1,34 @@
+window, .wallpaper-item {
+    background-color: #121212;
+}
+
+label {
+    font-size: 0px;
+}
+
+.wallpaper-item {
+    padding: 6px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    opacity: 0.85;
+    transition: all 200ms ease-out;
+}
+
+.wallpaper-item:hover {
+    border: 2px solid #ffffff;
+    opacity: 1;
+    transition: all 150ms ease-in-out;
+}
+
+scrollbar {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+}
+
+scrolledwindow:hover scrollbar {
+    opacity: 1;
+}
+
+scrolledwindow {
+    transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}

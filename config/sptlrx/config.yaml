@@ -1,0 +1,29 @@
+player: mpris
+ignoreErrors: true
+timerInterval: 200
+updateInterval: 2000
+style:
+  hAlignment: center
+  before:
+    foreground: ""
+    faint: true
+  current:
+    foreground: "#a3be8c"
+    bold: true
+  after:
+    foreground: ""
+    faint: true
+pipe:
+  length: 0
+  overflow: word
+mpd:
+  address: 127.0.0.1:6600
+  password: ""
+mopidy:
+  address: 127.0.0.1:6680
+mpris:
+  players: []
+browser:
+  port: 8974
+local:
+  folder: ""

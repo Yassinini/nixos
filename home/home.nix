@@ -220,35 +220,26 @@ xdg.desktopEntries.steam = {
   terminal = false;
 };
 
-home.file.".local/bin/yurrr" = {
-    source = ../local-bin/yurrr;
-    executable = true;
-  };
-  home.file.".local/bin/yeup" = {
-    source = ../local-bin/yeup;
-    executable = true;
-  };
+
+
+home.file.".local/bin/yurrr".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/local-bin/yurrr";
+  home.file.".local/bin/yeup".source  = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/local-bin/yeup";
 
   xdg.configFile = {
-    "tmux".source            = ../config/tmux;
-    "tmux".recursive         = true;
-    "fastfetch".source       = ../config/fastfetch;
-    "fastfetch".recursive    = true;
-    "waybar".source          = ../config/waybar;
-    "waybar".recursive       = true;
-    "rofi".source            = ../config/rofi;
-    "rofi".recursive         = true;
-    "wofi".source            = ../config/wofi;
-    "wofi".recursive         = true;
-    "kitty".source           = ../config/kitty;
-    "kitty".recursive        = true;
-    "matugen".source         = ../config/matugen;
-    "matugen".recursive      = true;
-    "spicetify".source       = ../config/spicetify;
-    "spicetify".recursive    = true;
-    "swaync".source          = ../config/swaync;
-    "swaync".recursive       = true;
-    "spotify-player".source  = ../config/spotify-player;
-    "spotify-player".recursive = true;
+    "tmux".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/tmux";
+    "fastfetch".source      = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/fastfetch";
+    "waybar".source         = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/waybar";
+    "rofi".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/rofi";
+    "wofi".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/wofi";
+    "kitty".source          = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/kitty";
+    "matugen".source        = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/matugen";
+    "spicetify".source      = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/spicetify";
+    "swaync".source         = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/swaync";
+    "spotify-player".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/spotify-player";
+   "glava".source    = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/glava";
+    "nvim".source     = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/nvim";
+    "btop".source     = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/btop";
+    "sptlrx".source   = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/sptlrx";
+    "waypaper".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/nixos/config/waypaper";
   };
 }
