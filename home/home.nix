@@ -33,17 +33,6 @@ home.packages = with pkgs; [
     gum  
 ];
 # apps="discordo spotatui yazi btop lavat cmatrix asciiquarium nyancat nvim "
-home.file.".config/tmux/scripts/app-launcher.sh" = {
-    text = ''
-      #!/usr/bin/env bash
-      apps="discordo spotatui yazi btop lavat cmatrix asciiquarium nyancat nvim "
-
-      choice=$(echo "$apps" | tr ' ' '\n' | /etc/profiles/per-user/suupatruupa/bin/gum choose --height 9)
-
-      [ -n "$choice" ] && exec $choice
-    '';
-    executable = true;
-  };
 
 
   # Pull in Caelestia's home-manager module
@@ -230,4 +219,36 @@ xdg.desktopEntries.steam = {
   categories = [ "Game" "Network" ];
   terminal = false;
 };
+
+home.file.".local/bin/yurrr" = {
+    source = ../local-bin/yurrr;
+    executable = true;
+  };
+  home.file.".local/bin/yeup" = {
+    source = ../local-bin/yeup;
+    executable = true;
+  };
+
+  xdg.configFile = {
+    "tmux".source            = ../config/tmux;
+    "tmux".recursive         = true;
+    "fastfetch".source       = ../config/fastfetch;
+    "fastfetch".recursive    = true;
+    "waybar".source          = ../config/waybar;
+    "waybar".recursive       = true;
+    "rofi".source            = ../config/rofi;
+    "rofi".recursive         = true;
+    "wofi".source            = ../config/wofi;
+    "wofi".recursive         = true;
+    "kitty".source           = ../config/kitty;
+    "kitty".recursive        = true;
+    "matugen".source         = ../config/matugen;
+    "matugen".recursive      = true;
+    "spicetify".source       = ../config/spicetify;
+    "spicetify".recursive    = true;
+    "swaync".source          = ../config/swaync;
+    "swaync".recursive       = true;
+    "spotify-player".source  = ../config/spotify-player;
+    "spotify-player".recursive = true;
+  };
 }
