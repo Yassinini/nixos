@@ -287,7 +287,24 @@
         "nixpkgs": "nixpkgs",
         "pixie-sddm": "pixie-sddm",
         "quickshell": "quickshell_3",
+        "shiki-src": "shiki-src",
         "spicetify-nix": "spicetify-nix"
+      }
+    },
+    "shiki-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786127570,
+        "narHash": "sha256-Nu6sOF70BXugocrVD6Q18Xu9h3BlkRx/00O/NblMl/E=",
+        "owner": "sazardev",
+        "repo": "shiki",
+        "rev": "e5e45ad8fc683ee3db3872150a9a7515255f851d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sazardev",
+        "repo": "shiki",
+        "type": "github"
       }
     },
     "spicetify-nix": {

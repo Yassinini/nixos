@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, hyprglass,  ... }:
+{ config, pkgs, inputs, hyprglass, shiki-cli,  ... }:
 
 {
   home.username = "suupatruupa";
@@ -30,7 +30,8 @@ home.packages = with pkgs; [
     networkmanagerapplet
     nwg-look
     gtk4-layer-shell
-    gum  
+    gum
+    shiki-cli
 ];
 # apps="discordo spotatui yazi btop lavat cmatrix asciiquarium nyancat nvim "
 
