@@ -310,6 +310,9 @@ dysk
 atuin
 superfile
 zoxide
+github-cli
+pwvucontrol
+
 
 #myappshere
 ];

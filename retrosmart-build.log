@@ -1,0 +1,6 @@
+warning: Git tree '/home/suupatruupa/.nixos' is dirty
+evaluation warning: The xorg package set has been deprecated, 'xorg.xcursorgen' has been renamed to 'xcursorgen'
+this derivation will be built:
+  /nix/store/zkcba9n658c5gdp745wai7hwx6bi8bwz-retrosmart-x11-cursors-unstable-2025-01-13.drv
+building '/nix/store/zkcba9n658c5gdp745wai7hwx6bi8bwz-retrosmart-x11-cursors-unstable-2025-01-13.drv'...
+/nix/store/wyqh9fl8h56w70id7cmdl4dvssiabrz6-retrosmart-x11-cursors-unstable-2025-01-13

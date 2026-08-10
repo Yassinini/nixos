@@ -1,16 +1,19 @@
-{ config, pkgs, inputs, hyprglass, shiki-cli,  ... }:
+{ config, pkgs, inputs, hyprglass, shiki-cli, retrosmart-cursors,  ... }:
 
 {
   home.username = "suupatruupa";
   home.homeDirectory = "/home/suupatruupa";
   home.stateVersion = "26.05";
 
-  home.pointerCursor = {
+
+home.pointerCursor = {
   gtk.enable = true;
-  package = pkgs.bibata-cursors;
-  name = "Bibata-Modern-Classic";
-  size = 24;
+  x11.enable = true;
+  package = retrosmart-cursors;
+  name = "retrosmart-xcursor-black";
+  size = 34;
 };
+
 
 home.packages = with pkgs; [
     rofi
