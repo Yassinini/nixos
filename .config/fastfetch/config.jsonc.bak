@@ -1,17 +1,33 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "source": "nixos_small",
-    "position": "top",
-    "padding": {
-      "right": 4
-    }
+    "type": "none"
   },
   "display": {
     "separator": "  "
   },
   "modules": [
-    "title",
+    {
+      "type": "custom",
+      "format": "  ________ __ __ _____________  "
+    },
+    {
+      "type": "custom",
+      "format": " /  ___/  |  \\  |  \\____ \\__  \\ "
+    },
+    {
+      "type": "custom",
+      "format": " \\___ \\|  |  /  |  /  |_> > __ \\_"
+    },
+    {
+      "type": "custom",
+      "format": "/____  >____/|____/|   __(____  /"
+    },
+    {
+      "type": "custom",
+      "format": "     \\/            |__|       \\/ "
+    },
+    "break",
     {
       "type": "custom",
       "format": "┌─── System Information ───┐"
@@ -21,16 +37,16 @@
       "key": "│  distro "
     },
     {
+      "type": "uptime",
+      "key": "│ 󱎫 uptime "
+    },
+    {
       "type": "shell",
       "key": "│  shell  "
     },
     {
       "type": "terminal",
       "key": "│  term   "
-    },
-    {
-      "type": "terminalfont",
-      "key": "│ 󰛖 font   "
     },
     {
       "type": "cpu",

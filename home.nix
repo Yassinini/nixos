@@ -231,7 +231,8 @@ home.shellAliases = {
   yup = "~/.local/bin/yeup";
   rebuild = "sudo nixos-rebuild switch --flake ~/.nixos#nixos";
   bk = "cd ~/.nixos";
-};
+    hyprset = "nix-shell -p python312 python312Packages.pygobject3 gtk4 libadwaita gobject-introspection cairo pkg-config uv lua5_4 glib --run 'export XDG_DATA_DIRS=\"$GSETTINGS_SCHEMAS_PATH:$XDG_DATA_DIRS\"; hyprmod'";
+ };
 
 programs.bash = {
   enable = true;
