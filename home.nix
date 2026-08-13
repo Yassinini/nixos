@@ -35,6 +35,14 @@ home.packages = with pkgs; [
     gtk4-layer-shell
     gum
     shiki-cli
+
+# suupathing
+ (writeShellScriptBin "suupa" ''
+    setsid -f kitty -e spotatui >/dev/null 2>&1
+    setsid -f kitty -e lavat >/dev/null 2>&1
+    setsid -f kitty -e btop >/dev/null 2>&1
+  '')
+
 ];
 # apps="discordo spotatui yazi btop lavat cmatrix asciiquarium nyancat nvim "
 
