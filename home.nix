@@ -40,7 +40,7 @@ home.packages = with pkgs; [
  (writeShellScriptBin "suupa" ''
     setsid -f kitty -e spotatui >/dev/null 2>&1
     setsid -f kitty -e lavat >/dev/null 2>&1
-    setsid -f kitty -e btop >/dev/null 2>&1
+    setsid -f kitty -e discordo >/dev/null 2>&1
   '')
 
 ];
