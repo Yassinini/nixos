@@ -2,15 +2,24 @@
 reload_apps = true
 
 [templates.kitty]
-input_path = '/home/suupatruupa/.config/matugen/templates/colors-kitty.conf'
+input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/colors-kitty.conf'
 output_path = '/home/suupatruupa/.config/kitty/colors-matugen.conf'
 post_hook = 'pkill -USR1 kitty'
 
 [templates.rofi_launcher]
-input_path = '/home/suupatruupa/.config/matugen/templates/colors-rofi.rasi'
+input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/colors-rofi.rasi'
 output_path = '/home/suupatruupa/.cache/colors-rofi.rasi'
 
 [templates.rofi_wallpaper]
-input_path = '/home/suupatruupa/.config/matugen/templates/wallpaper-rofi.rasi'
+input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/wallpaper-rofi.rasi'
 output_path = '/home/suupatruupa/.cache/wallpaper-rofi.rasi'
 
+[templates.waybar]
+input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/waybar.css'
+output_path = '/home/suupatruupa/.cache/colors-waybar.css'
+post_hook = 'pkill -USR2 waybar'
+
+[templates.swaync]
+input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/swaync.css'
+output_path = '/home/suupatruupa/.cache/colors-swaync.css'
+post_hook = 'swaync-client -rs'
