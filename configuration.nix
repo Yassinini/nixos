@@ -192,10 +192,21 @@ nixpkgs.config.allowUnfree = true;
     xwayland.enable = true;
   };
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+xdg.portal = {
+  enable = true;
+  extraPortals = [
+    pkgs.xdg-desktop-portal-gtk
+    pkgs.xdg-desktop-portal-hyprland
+  ];
+  config = {
+    common.default = [ "hyprland" "gtk" ];
+    hyprland = {
+      default = [ "hyprland" "gtk" ];
+      "org.freedesktop.impl.portal.ScreenCast" = "hyprland";
+      "org.freedesktop.impl.portal.Screenshot" = "hyprland";
+    };
   };
+};
 
   ############################################################
   # Printing & Audio
@@ -352,7 +363,8 @@ nixpkgs.config.allowUnfree = true;
     commit-mono
     qt6.qtsvg
     qt6.qtimageformats
- 
+
+    bluetuith
     zoom
     # myappshere
   ];

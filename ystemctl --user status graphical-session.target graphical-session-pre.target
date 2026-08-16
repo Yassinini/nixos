@@ -1,0 +1,295 @@
+xdg-desktop-portal.service
+[0;1;32m●[0m ├─dbus.socket
+[0;1;32m●[0m │ └─app.slice
+[0;1;32m●[0m │   └─-.slice
+[0;1;32m●[0m ├─session.slice
+[0;1;32m●[0m │ └─-.slice
+[0;1;32m●[0m ├─basic.target
+[0;1;32m●[0m │ ├─systemd-tmpfiles-setup.service
+[0;1;32m●[0m │ │ └─app.slice
+[0;1;32m●[0m │ │   └─-.slice
+[0;1;32m●[0m │ ├─paths.target
+[0;1;32m●[0m │ ├─sockets.target
+[0;1;32m●[0m │ │ ├─dbus.socket
+[0;1;32m●[0m │ │ │ └─app.slice
+[0;1;32m●[0m │ │ │   └─-.slice
+[0;1;32m●[0m │ │ ├─gcr-ssh-agent.socket
+[0;1;32m●[0m │ │ │ └─app.slice
+[0;1;32m●[0m │ │ │   └─-.slice
+[0;1;32m●[0m │ │ ├─pipewire-pulse.socket
+[0;1;32m●[0m │ │ │ └─app.slice
+[0;1;32m●[0m │ │ │   └─-.slice
+[0;1;32m●[0m │ │ ├─pipewire.socket
+[0;1;32m●[0m │ │ │ └─app.slice
+[0;1;32m●[0m │ │ │   └─-.slice
+[0;1;32m●[0m │ │ ├─podman.socket
+[0;1;32m●[0m │ │ │ └─app.slice
+[0;1;32m●[0m │ │ │   └─-.slice
+[0;1;32m●[0m │ │ └─speech-dispatcher.socket
+[0;1;32m●[0m │ │   └─app.slice
+[0;1;32m●[0m │ │     └─-.slice
+[0;1;32m●[0m │ └─timers.target
+[0;1;32m●[0m │   └─systemd-tmpfiles-clean.timer
+[0m○[0m └─graphical-session.target
+[0;1;32m●[0m   ├─app-flatpak-app.zen_browser.zen-1688780790.scope
+[0;1;32m●[0m   │ └─app.slice
+[0;1;32m●[0m   │   └─-.slice
+[0;1;32m●[0m   ├─at-spi-dbus-bus.service
+[0;1;32m●[0m   │ ├─dbus.socket
+[0;1;32m●[0m   │ │ └─app.slice
+[0;1;32m●[0m   │ │   └─-.slice
+[0;1;32m●[0m   │ ├─session.slice
+[0;1;32m●[0m   │ │ └─-.slice
+[0;1;32m●[0m   │ └─basic.target
+[0;1;32m●[0m   │   ├─systemd-tmpfiles-setup.service
+[0;1;32m●[0m   │   │ └─app.slice
+[0;1;32m●[0m   │   │   └─-.slice
+[0;1;32m●[0m   │   ├─paths.target
+[0;1;32m●[0m   │   ├─sockets.target
+[0;1;32m●[0m   │   │ ├─dbus.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─gcr-ssh-agent.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire-pulse.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─podman.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ └─speech-dispatcher.socket
+[0;1;32m●[0m   │   │   └─app.slice
+[0;1;32m●[0m   │   │     └─-.slice
+[0;1;32m●[0m   │   └─timers.target
+[0;1;32m●[0m   │     └─systemd-tmpfiles-clean.timer
+[0;1;32m●[0m   ├─flatpak-session-helper.service
+[0;1;32m●[0m   │ ├─app.slice
+[0;1;32m●[0m   │ │ └─-.slice
+[0;1;32m●[0m   │ ├─dbus.socket
+[0;1;32m●[0m   │ │ └─app.slice
+[0;1;32m●[0m   │ │   └─-.slice
+[0;1;32m●[0m   │ └─basic.target
+[0;1;32m●[0m   │   ├─systemd-tmpfiles-setup.service
+[0;1;32m●[0m   │   │ └─app.slice
+[0;1;32m●[0m   │   │   └─-.slice
+[0;1;32m●[0m   │   ├─paths.target
+[0;1;32m●[0m   │   ├─sockets.target
+[0;1;32m●[0m   │   │ ├─dbus.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─gcr-ssh-agent.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire-pulse.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─podman.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ └─speech-dispatcher.socket
+[0;1;32m●[0m   │   │   └─app.slice
+[0;1;32m●[0m   │   │     └─-.slice
+[0;1;32m●[0m   │   └─timers.target
+[0;1;32m●[0m   │     └─systemd-tmpfiles-clean.timer
+[0;1;32m●[0m   ├─gvfs-daemon.service
+[0;1;32m●[0m   │ ├─dbus.socket
+[0;1;32m●[0m   │ │ └─app.slice
+[0;1;32m●[0m   │ │   └─-.slice
+[0;1;32m●[0m   │ ├─session.slice
+[0;1;32m●[0m   │ │ └─-.slice
+[0;1;32m●[0m   │ └─basic.target
+[0;1;32m●[0m   │   ├─systemd-tmpfiles-setup.service
+[0;1;32m●[0m   │   │ └─app.slice
+[0;1;32m●[0m   │   │   └─-.slice
+[0;1;32m●[0m   │   ├─paths.target
+[0;1;32m●[0m   │   ├─sockets.target
+[0;1;32m●[0m   │   │ ├─dbus.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─gcr-ssh-agent.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire-pulse.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─podman.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ └─speech-dispatcher.socket
+[0;1;32m●[0m   │   │   └─app.slice
+[0;1;32m●[0m   │   │     └─-.slice
+[0;1;32m●[0m   │   └─timers.target
+[0;1;32m●[0m   │     └─systemd-tmpfiles-clean.timer
+[0;1;32m●[0m   ├─swaync.service
+[0;1;32m●[0m   │ ├─app.slice
+[0;1;32m●[0m   │ │ └─-.slice
+[0;1;32m●[0m   │ ├─dbus.socket
+[0;1;32m●[0m   │ │ └─app.slice
+[0;1;32m●[0m   │ │   └─-.slice
+[0;1;32m●[0m   │ └─basic.target
+[0;1;32m●[0m   │   ├─systemd-tmpfiles-setup.service
+[0;1;32m●[0m   │   │ └─app.slice
+[0;1;32m●[0m   │   │   └─-.slice
+[0;1;32m●[0m   │   ├─paths.target
+[0;1;32m●[0m   │   ├─sockets.target
+[0;1;32m●[0m   │   │ ├─dbus.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─gcr-ssh-agent.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire-pulse.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─podman.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ └─speech-dispatcher.socket
+[0;1;32m●[0m   │   │   └─app.slice
+[0;1;32m●[0m   │   │     └─-.slice
+[0;1;32m●[0m   │   └─timers.target
+[0;1;32m●[0m   │     └─systemd-tmpfiles-clean.timer
+[0m○[0m   ├─waybar-ycal.service
+[0;1;32m●[0m   │ ├─app.slice
+[0;1;32m●[0m   │ │ └─-.slice
+[0;1;32m●[0m   │ └─basic.target
+[0;1;32m●[0m   │   ├─systemd-tmpfiles-setup.service
+[0;1;32m●[0m   │   │ └─app.slice
+[0;1;32m●[0m   │   │   └─-.slice
+[0;1;32m●[0m   │   ├─paths.target
+[0;1;32m●[0m   │   ├─sockets.target
+[0;1;32m●[0m   │   │ ├─dbus.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─gcr-ssh-agent.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire-pulse.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─podman.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ └─speech-dispatcher.socket
+[0;1;32m●[0m   │   │   └─app.slice
+[0;1;32m●[0m   │   │     └─-.slice
+[0;1;32m●[0m   │   └─timers.target
+[0;1;32m●[0m   │     └─systemd-tmpfiles-clean.timer
+[0;1;32m●[0m   ├─xdg-document-portal.service
+[0;1;32m●[0m   │ ├─dbus-broker.service
+[0;1;32m●[0m   │ │ ├─dbus.socket
+[0;1;32m●[0m   │ │ │ └─app.slice
+[0;1;32m●[0m   │ │ │   └─-.slice
+[0;1;32m●[0m   │ │ └─session.slice
+[0;1;32m●[0m   │ │   └─-.slice
+[0;1;32m●[0m   │ ├─dbus.socket
+[0;1;32m●[0m   │ │ └─app.slice
+[0;1;32m●[0m   │ │   └─-.slice
+[0;1;32m●[0m   │ ├─session.slice
+[0;1;32m●[0m   │ │ └─-.slice
+[0;1;32m●[0m   │ └─basic.target
+[0;1;32m●[0m   │   ├─systemd-tmpfiles-setup.service
+[0;1;32m●[0m   │   │ └─app.slice
+[0;1;32m●[0m   │   │   └─-.slice
+[0;1;32m●[0m   │   ├─paths.target
+[0;1;32m●[0m   │   ├─sockets.target
+[0;1;32m●[0m   │   │ ├─dbus.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─gcr-ssh-agent.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire-pulse.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─podman.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ └─speech-dispatcher.socket
+[0;1;32m●[0m   │   │   └─app.slice
+[0;1;32m●[0m   │   │     └─-.slice
+[0;1;32m●[0m   │   └─timers.target
+[0;1;32m●[0m   │     └─systemd-tmpfiles-clean.timer
+[0;1;32m●[0m   ├─xdg-permission-store.service
+[0;1;32m●[0m   │ ├─dbus-broker.service
+[0;1;32m●[0m   │ │ ├─dbus.socket
+[0;1;32m●[0m   │ │ │ └─app.slice
+[0;1;32m●[0m   │ │ │   └─-.slice
+[0;1;32m●[0m   │ │ └─session.slice
+[0;1;32m●[0m   │ │   └─-.slice
+[0;1;32m●[0m   │ ├─dbus.socket
+[0;1;32m●[0m   │ │ └─app.slice
+[0;1;32m●[0m   │ │   └─-.slice
+[0;1;32m●[0m   │ ├─session.slice
+[0;1;32m●[0m   │ │ └─-.slice
+[0;1;32m●[0m   │ └─basic.target
+[0;1;32m●[0m   │   ├─systemd-tmpfiles-setup.service
+[0;1;32m●[0m   │   │ └─app.slice
+[0;1;32m●[0m   │   │   └─-.slice
+[0;1;32m●[0m   │   ├─paths.target
+[0;1;32m●[0m   │   ├─sockets.target
+[0;1;32m●[0m   │   │ ├─dbus.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─gcr-ssh-agent.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire-pulse.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─pipewire.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ ├─podman.socket
+[0;1;32m●[0m   │   │ │ └─app.slice
+[0;1;32m●[0m   │   │ │   └─-.slice
+[0;1;32m●[0m   │   │ └─speech-dispatcher.socket
+[0;1;32m●[0m   │   │   └─app.slice
+[0;1;32m●[0m   │   │     └─-.slice
+[0;1;32m●[0m   │   └─timers.target
+[0;1;32m●[0m   │     └─systemd-tmpfiles-clean.timer
+[0;1;32m●[0m   └─basic.target
+[0;1;32m●[0m     ├─systemd-tmpfiles-setup.service
+[0;1;32m●[0m     │ └─app.slice
+[0;1;32m●[0m     │   └─-.slice
+[0;1;32m●[0m     ├─paths.target
+[0;1;32m●[0m     ├─sockets.target
+[0;1;32m●[0m     │ ├─dbus.socket
+[0;1;32m●[0m     │ │ └─app.slice
+[0;1;32m●[0m     │ │   └─-.slice
+[0;1;32m●[0m     │ ├─gcr-ssh-agent.socket
+[0;1;32m●[0m     │ │ └─app.slice
+[0;1;32m●[0m     │ │   └─-.slice
+[0;1;32m●[0m     │ ├─pipewire-pulse.socket
+[0;1;32m●[0m     │ │ └─app.slice
+[0;1;32m●[0m     │ │   └─-.slice
+[0;1;32m●[0m     │ ├─pipewire.socket
+[0;1;32m●[0m     │ │ └─app.slice
+[0;1;32m●[0m     │ │   └─-.slice
+[0;1;32m●[0m     │ ├─podman.socket
+[0;1;32m●[0m     │ │ └─app.slice
+[0;1;32m●[0m     │ │   └─-.slice
+[0;1;32m●[0m     │ └─speech-dispatcher.socket
+[0;1;32m●[0m     │   └─app.slice
+[0;1;32m●[0m     │     └─-.slice
+[0;1;32m●[0m     └─timers.target
+[0;1;32m●[0m       └─systemd-tmpfiles-clean.timer
