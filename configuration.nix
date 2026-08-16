@@ -365,11 +365,9 @@ xdg.portal = {
     qt6.qtimageformats
 
     bluetuith
-    zoom
     # myappshere
   ];
-
-
+programs.zoom-us.enable = true;
 
   ############################################################
   # Fonts
