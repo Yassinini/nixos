@@ -14,12 +14,3 @@ output_path = '/home/suupatruupa/.cache/colors-rofi.rasi'
 input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/wallpaper-rofi.rasi'
 output_path = '/home/suupatruupa/.cache/wallpaper-rofi.rasi'
 
-[templates.waybar]
-input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/waybar.css'
-output_path = '/home/suupatruupa/.cache/colors-waybar.css'
-post_hook = 'pkill -USR2 waybar'
-
-[templates.swaync]
-input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/swaync.css'
-output_path = '/home/suupatruupa/.cache/colors-swaync.css'
-post_hook = 'swaync-client -rs'

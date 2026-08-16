@@ -31,7 +31,8 @@ in
     })
   ];
 
-  nixpkgs.config.allowUnfree = true;
+nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowBroken = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.shellAliases = {
@@ -352,8 +353,10 @@ in
     qt6.qtsvg
     qt6.qtimageformats
  
+    zoom
     # myappshere
   ];
+
 
 
   ############################################################
