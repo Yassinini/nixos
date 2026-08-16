@@ -74,6 +74,7 @@
       setsid -f kitty -e discordo >/dev/null 2>&1
     '')
   ];
+  # apps="discordo spotatui yazi btop lavat cmatrix asciiquarium nyancat nvim "
 
   ############################################################
   # Shell Integrations
@@ -155,6 +156,61 @@
   };
 
   ############################################################
+  # Hyprlock — screen lock
+  ############################################################
+  programs.hyprlock = {
+    enable = true;
+    settings = {
+      general = {
+        disable_loading_bar = true;
+        grace = 0;
+        hide_cursor = true;
+        no_fade_in = false;
+        no_fade_out = false;
+      };
+
+      background = [
+        {
+          path = "screenshot";
+          blur_passes = 3;
+          blur_size = 8;
+        }
+      ];
+
+      label = [
+        {
+          text = "cmd[update:1000] echo \"$(date +'%H:%M')\"";
+          font_size = 90;
+          position = "0, 200";
+          halign = "center";
+          valign = "center";
+        }
+        {
+          text = "cmd[update:1000] echo \"$(date +'%A, %B %d')\"";
+          font_size = 24;
+          position = "0, 100";
+          halign = "center";
+          valign = "center";
+        }
+      ];
+
+      input-field = [
+        {
+          size = "300, 50";
+          position = "0, -80";
+          halign = "center";
+          valign = "center";
+          outer_color = "rgba(255, 255, 255, 0.3)";
+          inner_color = "rgba(0, 0, 0, 0.5)";
+          font_color = "rgba(255, 255, 255, 0.9)";
+          fade_on_empty = false;
+          placeholder_text = "Password...";
+        }
+      ];
+    };
+  };
+
+  ############################################################
   # Hyprland
   ############################################################
   wayland.windowManager.hyprland.plugins = [
@@ -182,7 +238,7 @@
       "SUPER, Q, exec, kitty"
       "SUPER, C, killactive"
       "SUPER, M, exit"
-      "SUPER, L, exec, loginctl lock-session"   # TODO: debug — likely needs hyprlock/swaylock hooked to logind for a visible lock screen
+      "SUPER, L, exec, hyprlock"
       "SUPER SHIFT, K, exec, /home/suupatruupa/.config/hypr/scripts/wallpaper_picker.sh"
     ];
   };
