@@ -24,7 +24,7 @@
   };
 
   ############################################################
-  # GTK / QT Theming
+  # GTK / QT / Dark Mode Theming
   ############################################################
   gtk = {
     enable = true;
@@ -32,6 +32,8 @@
       name = "JetBrainsMono Nerd Font";
       size = 11;
     };
+    gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
 
   qt = {
@@ -39,10 +41,17 @@
     style.name = "adwaita-dark";
   };
 
+  # Force dark preference across Freedesktop portals (XDG Desktop Portal)
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+  };
+
   home.sessionVariables = {
     GTK_THEME = "Adwaita:dark";
     QT_STYLE_OVERRIDE = "adwaita-dark";
-    GI_TYPELIB_PATH = "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0";
+    GI_TYPELIB_PATH = "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0:${pkgs.libadwaita}/lib/girepository-1.0";
   };
 
   ############################################################
@@ -74,7 +83,6 @@
       setsid -f kitty -e discordo >/dev/null 2>&1
     '')
   ];
-  # apps="discordo spotatui yazi btop lavat cmatrix asciiquarium nyancat nvim "
 
   ############################################################
   # Shell Integrations
@@ -311,9 +319,9 @@
     "spicetify".source      = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/spicetify";
     "swaync".source         = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/swaync";
     "spotify-player".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/spotify-player";
-    "glava".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/glava";
-    "nvim".source            = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/nvim";
-    "btop".source            = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/btop";
-    "sptlrx".source          = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/sptlrx";
+    "glava".source          = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/glava";
+    "nvim".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/nvim";
+    "btop".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/btop";
+    "sptlrx".source         = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/sptlrx";
   };
 }

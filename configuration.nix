@@ -351,9 +351,10 @@ in
     commit-mono
     qt6.qtsvg
     qt6.qtimageformats
-
+ 
     # myappshere
   ];
+
 
   ############################################################
   # Fonts
