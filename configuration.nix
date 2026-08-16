@@ -1,17 +1,32 @@
-# Edit this configuration1 file to define what should be installed on
+# Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
 { config, pkgs, inputs, hyprglass, ... }:
 
 let
-  
-spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   # Imports & System Settings
   imports = [
-    ./hardware-configuration.nix  # <-- MOVED HERE
+    ./hardware-configuration.nix
+  ];
+
+  documentation.man.man-db.enable = false;
+
+  nixpkgs.overlays = [
+    (final: prev: {
+      python3 = prev.python3.override {
+        packageOverrides = pyFinal: pyPrev: {
+          flatlatex = pyPrev.flatlatex.overridePythonAttrs (old: {
+            disabled = false;
+            doCheck = false;
+          });
+        };
+      };
+      python3Packages = final.python3.pkgs;
+    })
   ];
 
   environment.shellAliases = {
@@ -23,20 +38,20 @@ in
     memoryPercent = 20;
   };
 
-  #. Global Home Manager Settings
+  # Global Home Manager Settings
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs hyprglass; };
+    backupFileExtension = "backup";   
+  extraSpecialArgs = { inherit inputs hyprglass; };
 
-    #  User & Spicetify Configuration
-    
-users.suupatruupa = { pkgs, ... }: {
+    # User Configurations
+    users.suupatruupa = { pkgs, ... }: {
       imports = [
         # Spicetify HM module
         inputs.spicetify-nix.homeManagerModules.default
 
-        # Separated Spicetify Config
+        # Spicetify Config
         ({ ... }: {
           programs.spicetify = {
             enable = true;
@@ -58,72 +73,79 @@ users.suupatruupa = { pkgs, ... }: {
               marketplace
               newReleases
             ] ++ [
-              # Added spicetify-visualizer custom app
               {
-               name = "visualizer.js";
-    src = pkgs.fetchFromGitHub {
-      owner = "Konsl";
-      repo = "spicetify-visualizer";
-      rev = "dist";
-      hash = "sha256-9mdORE+9MKLGyQYQ2P3So8n3IiRilzA1t11Mav/0JJI=";
+                name = "visualizer.js";
+                src = pkgs.fetchFromGitHub {
+                  owner = "Konsl";
+                  repo = "spicetify-visualizer";
+                  rev = "dist";
+                  hash = "sha256-9mdORE+9MKLGyQYQ2P3So8n3IiRilzA1t11Mav/0JJI=";
                 };
               }
             ];
           };
         })
       ];
-    };
+
+      # hakuspace Dotfiles & Scripts Imports via Home Manager
+      xdg.configFile = {
+        "rofi".source = pkgs.lib.mkForce ./dotfiles/rofi;
+        "swaync".source = pkgs.lib.mkForce ./dotfiles/swaync;
+        "cava".source = pkgs.lib.mkForce ./dotfiles/cava;
+        "hakuspace".source = pkgs.lib.mkForce ./dotfiles/hakuspace;
+        "waybar".source = pkgs.lib.mkForce ./dotfiles/waybar;
+      };
+     };
   };
 
-programs.fish.enable = true;
+  programs.fish.enable = true;
 
-users.users.finley = {
-  isNormalUser = true;
-  shell = pkgs.fish;
-  group = "finley";
-  extraGroups = [ "wheel" "networkmanager" "video" "audio" ];  # adjust as needed
-};
+  users.users.finley = {
+    isNormalUser = true;
+    shell = pkgs.fish;
+    group = "finley";
+    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
+  };
 
-users.groups.finley = {};
+  users.groups.finley = {};
 
+  # Power & Session Management
+  services.logind.settings.Login.HandleLidSwitch = "ignore";
+  systemd.targets.sleep.enable = false;
+  systemd.targets.suspend.enable = false;
+  systemd.targets.hibernate.enable = false;
+  systemd.targets.hybrid-sleep.enable = false;
 
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true;
 
-
-services.logind.settings.Login.HandleLidSwitch = "ignore";
-systemd.targets.sleep.enable = false;
-systemd.targets.suspend.enable = false;
-systemd.targets.hibernate.enable = false;
-systemd.targets.hybrid-sleep.enable = false;
-
-
-services.gnome.gnome-keyring.enable = true;
-security.pam.services.login.enableGnomeKeyring = true;
-# Bootloader.
+  # Bootloader Configuration
   boot.loader.systemd-boot.enable = false;
-  boot.loader.grub.enable = true;
-  boot.loader.grub.efiSupport = true;
-  boot.loader.grub.device = "nodev";
-boot.loader.grub.useOSProber = true;  
-boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub = {
+    enable = true;
+    efiSupport = true;
+    device = "nodev";
+    useOSProber = true;
+    theme = "${pkgs.fetchFromGitHub {
+      owner = "harishnkr";
+      repo = "bsol";
+      rev = "master";
+      sha256 = "1nhazccsp71lxjyw15lns2gpch182j66d54qw8spzlniv5yk4gvj";
+    }}/bsol";
+  };
+  boot.loader.efi.canTouchEfiVariables = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-# terminal
-programs.starship.enable = true;
-
-  # Permanent fix for backlight not turning on after boot.
+  # Terminal & Display Driver Kernel Parameters
+  programs.starship.enable = true;
   boot.kernelParams = [ "acpi_backlight=video" ];
 
-  networking.hostName = "nixos"; # Define your hostname.
-
-  # Enable networking
+  networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
+  # Regional & Localization
   time.timeZone = "Africa/Cairo";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -136,55 +158,49 @@ programs.starship.enable = true;
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
+  # X11 & Display Managers
   services.xserver.enable = true;
-
-# Enable the GNOME Desktop Environment (kept so you can switch back anytime).
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
-services.greetd = {
-  enable = true;
-  settings = {
-    default_session = {
-      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --asterisks --cmd start-hyprland";
-      user = "greeter";
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --asterisks --cmd start-hyprland";
+        user = "greeter";
+      };
     };
   };
-};
-systemd.services.greetd.serviceConfig = {
-  Type = "idle";
-  StandardInput = "tty";
-  StandardOutput = "tty";
-  StandardError = "journal";
-  TTYReset = true;
-  TTYVHangup = true;
-  TTYVTDisallocate = true;
-};
 
-
-  # Enable Hyprland (Wayland compositor) - shows up as a session option at login.
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true; # lets normal X11 apps still run inside Hyprland
+  systemd.services.greetd.serviceConfig = {
+    Type = "idle";
+    StandardInput = "tty";
+    StandardOutput = "tty";
+    StandardError = "journal";
+    TTYReset = true;
+    TTYVHangup = true;
+    TTYVTDisallocate = true;
   };
 
-  # Needed for portals (screen share, file pickers, etc) under Hyprland.
+  # Hyprland & Wayland Portals
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
-  # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
     variant = "";
   };
 
-  # Enable CUPS to print documents.
+  # Printing & Audio Services
   services.printing.enable = true;
-
-  # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -194,231 +210,232 @@ systemd.services.greetd.serviceConfig = {
     pulse.enable = true;
   };
 
-
-
-  # Define a user account. Don't forget to set a password with 'passwd'.
+  # User Account Definition
   users.users."suupatruupa" = {
     isNormalUser = true;
     description = "suupatruupa";
     extraGroups = [ "networkmanager" "wheel" "bluetooth" "video" "audio" ];
-    packages = with pkgs; [
-    #  thunderbird
-    ];
   };
 
-  # Install firefox.
   programs.firefox.enable = true;
-
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search nixpkgs wget
-  # Enable brightness control backend daemon
-environment.systemPackages = with pkgs; [
-# Hyprland ecosystem essentials
-git
-kitty
-wofi            # App launcher
-libnotify       # Provides notify-send
-hyprpaper
-brightnessctl
-networkmanagerapplet
-wl-clipboard
-swappy          # Screenshot annotation
-ddcutil
-lm_sensors
-libqalculate
-fish
-vscode
-spotify
-discord
-alacritty
-playerctl
-grim
-slurp
-fastfetch
-btop
-cava
-peaclock
-stdenv.cc.cc.lib
-obsidian
-steam
-cmake meson cpio gcc pkg-config
-gnumake
-hyprglass
-prismlauncher
-waypaper
-lavat
-nyancat
-asciiquarium
-cmatrix
-mapscii
-python3Packages.euporie
-xorg.libxcb
-localsend
-pkgs.mpvpaper
-pkgs.neovim
+  # Combined System Packages & Hakuspace Stack
+  environment.systemPackages = with pkgs; [
+    # Core Wayland & Hakuspace Infrastructure
+    waybar
+    rofi
+    swaynotificationcenter
+    awww
+    cava
+    playerctl
+    brightnessctl
+    pavucontrol
+    wireplumber
+    networkmanagerapplet
+    xwayland-satellite
 
-(python3.withPackages (ps: with ps; [
-pynvim
-jupyter-client    # was jupyter_client
-ipykernel
-cairosvg
-pnglatex
-requests
-plotly
-]))
-inputs.quickshell.packages.${pkgs.system}.default
-papirus-icon-theme
-nerd-fonts.jetbrains-mono
-material-design-icons
-qt6.qtsvg
-qt6.qtimageformats
-nerd-fonts.symbols-only
-material-design-icons
-gcalcli
-inotify-tools
-sptlrx    
-wallust
-glava
-pkgs.tuigreet   
-waybar
-bluez
-brightnessctl
-fzf
-networkmanager
-pulseaudio
-commit-mono
+    # Screen Capture, Clipboard & Utilities
+    grim
+    slurp
+    wl-clipboard
+    cliphist
+    swappy
+    libnotify
+    ddcutil
+    lm_sensors
+    libqalculate
+    inotify-tools
+
+    # Shell, Editors & Terminal Utilities
+    git
+    kitty
+    alacritty
+    fish
+    vscode
+    neovim
+    fastfetch
+    btop
+    yazi
+    superfile
+    zoxide
+    atuin
+    fzf
+    tmux
+    gum
+    dysk
+    github-cli
+    appimage-run
+    bun
+
+    # Media, Audio & Applications
+    spotify
+    discord
+    discordo
+    obsidian
+    steam
+    prismlauncher
+    waypaper
+    mpvpaper
+    davinci-resolve
+    localsend
+    croc
+    spotify-player
+    spotatui
+    sptlrx
+    lynx
+    w3m
+    astroterm
+    ani-cli
+
+    # Rice / Aesthetic Toys
+    peaclock
+    lavat
+    nyancat
+    asciiquarium
+    cmatrix
+    mapscii
+    wallust
+    glava
+    tuigreet
+
+    # Development & Compilers
+    cmake
+    meson
+    cpio
+    gcc
+    pkg-config
+    gnumake
+    stdenv.cc.cc.lib
+    libxcb
+
+    # Python Environment
+    (python3.withPackages (ps: with ps; [
+      pynvim
+      jupyter-client
+      ipykernel
+      cairosvg
+      pnglatex
+      requests
+      plotly
+      euporie
+    ]))
+
+    # Inputs & External Flakes
+    inputs.quickshell.packages.${pkgs.system}.default
+    hyprglass
+
+    # Fonts & Icons
+    papirus-icon-theme
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.symbols-only
+    material-design-icons
+    commit-mono
+    qt6.qtsvg
+    qt6.qtimageformats
+   
+
 matugen
-ani-cli
-pkgs.hyprlock
-gpu-screen-recorder
-yazi
-discordo
-lynx
-croc
-spotify-player
-spotatui
-w3m
-astroterm    
-appimage-run
-pkgs.bun
-gum
-davinci-resolve
-dysk
-atuin
-superfile
-zoxide
-github-cli
-pwvucontrol
-
-
-#myappshere
+#myappshere  
 ];
 
-virtualisation.oci-containers.containers.waha = {
-  image = "devlikeapro/waha";
-  ports = [ "3000:3000" ];
-  autoStart = true;
-};
+  # Container Services
+  virtualisation.oci-containers.containers.waha = {
+    image = "devlikeapro/waha";
+    ports = [ "3000:3000" ];
+    autoStart = true;
+  };
 
-programs.gpu-screen-recorder.enable = true;
+  # Program Configurations
+  programs.gpu-screen-recorder.enable = true;
 
-programs.tmux = {
-  enable = true;
-   clock24 = true;
-   keyMode = "vi";
-};
+  programs.tmux = {
+    enable = true;
+    clock24 = true;
+    keyMode = "vi";
+  };
 
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+  };
 
-programs.neovim = {
-  enable = true;
-  defaultEditor = true;
-  viAlias = true;
-  vimAlias = true;
-};
-
-# Enable Bluetooth support hardware and wireless service
+  # Hardware Support & Services
   hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true; # Automatically power up the controller on boot
-  
-  # Enable Bluetooth device management tool service
+  hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
+  services.flatpak.enable = true;
 
-services.flatpak.enable = true;
-  system.stateVersion = "26.05"; # Did you read the comment?
+  # NVIDIA GPU Configuration
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-};
-services.xserver.videoDrivers = [ "nvidia" ];
+  };
+
+  services.xserver.videoDrivers = [ "nvidia" ];
+
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = true;
     open = false;
     package = config.boot.kernelPackages.nvidiaPackages.production;
-    dynamicBoost.enable = true;  
-};
-systemd.services.nvidia-max-power = {
-  description = "Set NVIDIA GPU Power Limit to 85W";
-  wantedBy = [ "multi-user.target" ];
-  after = [ "nvidia-persistenced.service" ];
-  path = [ config.boot.kernelPackages.nvidiaPackages.production.bin ];
-  script = "nvidia-smi -pl 85";
-  serviceConfig = {
-    Type = "oneshot";
+    dynamicBoost.enable = true;
   };
-};
+
+  systemd.services.nvidia-max-power = {
+    description = "Set NVIDIA GPU Power Limit to 85W";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "nvidia-persistenced.service" ];
+    path = [ config.boot.kernelPackages.nvidiaPackages.production.bin ];
+    script = "nvidia-smi -pl 85";
+    serviceConfig = {
+      Type = "oneshot";
+    };
+  };
+
+  systemd.services.nvidia-power-limit = {
+    description = "Set NVIDIA Power Limit to Maximum";
+    after = [ "display-manager.service" ];
+    wantedBy = [ "multi-user.target" ];
+    path = with pkgs; [
+      coreutils
+      gnugrep
+      gawk
+      config.hardware.nvidia.package.bin
+    ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "nvidia-power-caps" ''
+        MAX_PWR=$(nvidia-smi -q -d POWER | grep "Max Power Limit" | awk '{print $(NF-1)}')
+        if [ -n "$MAX_PWR" ]; then
+          nvidia-smi -pl "$MAX_PWR"
+        else
+          echo "Could not detect Max Power Limit"
+          exit 1
+        fi
+      '';
+    };
+  };
+
   systemd.services.nvidia-suspend.enable = true;
   systemd.services.nvidia-hibernate.enable = true;
   systemd.services.nvidia-resume.enable = true;
-boot.initrd.kernelModules = [ "nvidia" ];
-environment.sessionVariables = {
+
+  boot.initrd.kernelModules = [ "nvidia" ];
+
+  environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "nvidia";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
     __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
-      LD_LIBRARY_PATH = "/run/current-system/sw/share/nix-ld/lib";
   };
 
-
-boot.loader.grub.theme = "${pkgs.fetchFromGitHub {
-  owner = "harishnkr";
-  repo = "bsol";
-  rev = "master";
-  sha256 = "1nhazccsp71lxjyw15lns2gpch182j66d54qw8spzlniv5yk4gvj";
-}}/bsol";
-
-
-systemd.services.nvidia-power-limit = {
-  description = "Set NVIDIA Power Limit to Maximum";
-  after = [ "display-manager.service" ];
-  wantedBy = [ "multi-user.target" ];
-  path = with pkgs; [
-    coreutils
-    gnugrep
-    gawk
-    config.hardware.nvidia.package.bin
-  ];
-  serviceConfig = {
-    Type = "oneshot";
-    RemainAfterExit = true;
-    ExecStart = pkgs.writeShellScript "nvidia-power-caps" ''
-      # $(NF-1) = the numeric value, since the line always ends in "<value> W"
-      MAX_PWR=$(nvidia-smi -q -d POWER | grep "Max Power Limit" | awk '{print $(NF-1)}')
-      if [ -n "$MAX_PWR" ]; then
-        nvidia-smi -pl "$MAX_PWR"
-      else
-        echo "Could not detect Max Power Limit"
-        exit 1
-      fi
-    '';
-  };
-};
-
-programs.nix-ld = {
+  # Nix-LD Binary Compatibility Layer
+  programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
       stdenv.cc.cc.lib
@@ -443,10 +460,12 @@ programs.nix-ld = {
     ];
   };
 
-fonts.fontconfig.defaultFonts = {
+  # System Fonts
+  fonts.fontconfig.defaultFonts = {
     serif = [ "JetBrainsMono Nerd Font" ];
     sansSerif = [ "JetBrainsMono Nerd Font" ];
     monospace = [ "JetBrainsMono Nerd Font" ];
   };
 
+  system.stateVersion = "26.05";
 }

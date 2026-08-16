@@ -1,0 +1,89 @@
+* {
+    background:          {{colors.surface.default.hex}};
+    background-alt:      {{colors.surface_container_high.default.hex}};
+    foreground:          {{colors.on_surface.default.hex}};
+    primary:             {{colors.primary.default.hex}};
+    on-primary:          {{colors.on_primary.default.hex}};
+    primary-container:   {{colors.primary_container.default.hex}};
+    on-primary-container:{{colors.on_primary_container.default.hex}};
+    outline:             {{colors.outline.default.hex}};
+
+    background-color: transparent;
+    text-color:       @foreground;
+    margin:           0;
+    padding:          0;
+    spacing:          0;
+}
+
+window {
+    width:            600px;
+    border:           2px;
+    border-color:     @primary;
+    border-radius:    16px;
+    background-color: @background;
+    padding:          16px;
+}
+
+mainbox {
+    spacing:          12px;
+    children:         [ "inputbar", "listview" ];
+}
+
+inputbar {
+    spacing:          10px;
+    background-color: @background-alt;
+    border-radius:    10px;
+    padding:          10px 14px;
+    children:         [ "prompt", "entry" ];
+}
+
+prompt {
+    text-color:       @primary;
+    font:             "Bold 10";
+}
+
+entry {
+    placeholder:      "Search...";
+    placeholder-color:@outline;
+    text-color:       @foreground;
+}
+
+listview {
+    lines:            7;
+    columns:          1;
+    spacing:          6px;
+    cycle:            true;
+    dynamic:          true;
+    fixed-height:     false;
+}
+
+element {
+    orientation:      horizontal;
+    children:         [ "element-icon", "element-text" ];
+    padding:          8px 12px;
+    border-radius:    8px;
+    spacing:          12px;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color:       @foreground;
+}
+
+element selected.normal {
+    background-color: @primary;
+    text-color:       @on-primary;
+}
+
+element-icon {
+    size:             28px;
+    horizontal-align: 0.0;
+    vertical-align:   0.5;
+}
+
+element-text {
+    horizontal-align: 0.0;
+    vertical-align:   0.5;
+    text-color:       inherit;
+    expand:           true;
+}

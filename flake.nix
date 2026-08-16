@@ -23,7 +23,6 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Added pixie-sddm input
     pixie-sddm = {
       url = "github:xCaptaiN09/pixie-sddm";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,16 +32,18 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      # Custom hyprglass derivation
-      hyprglass = pkgs.stdenv.mkDerivation {
+      
+      # Custom hyprglass derivation (Updated to main branch for modern Hyprland compatibility)
+        hyprglass = pkgs.stdenv.mkDerivation {
         pname = "hyprglass";
-        version = "0.6.2";
+        version = "unstable-2026-08";
         src = pkgs.fetchFromGitHub {
           owner = "hyprnux";
           repo = "hyprglass";
-          rev = "v0.6.2";
-          sha256 = "sha256-6qa0PoeKfGSpXpILgp2yuYfRmrQKjDSQWpy8q27u1uE=";
+          rev = "main";
+          hash = "sha256-x/584kY+XXlU/OWKtZAFo89VtowjLXs1DiP9PC0o0Os=";
         };
+
         nativeBuildInputs = with pkgs; [ pkg-config cpio gcc gnumake ];
         dontUseCmakeConfigure = true;
         dontUseMesonConfigure = true;
@@ -73,7 +74,7 @@
           lua5_4
           openssl
         ];
-OPENSSL_NO_VENDOR= 1;
+        OPENSSL_NO_VENDOR = 1;
         buildPhase = ''
           make
         '';
@@ -82,12 +83,13 @@ OPENSSL_NO_VENDOR= 1;
           cp hyprglass.so $out/lib/
         '';
       };
-      # Custom shiki-cli derivation (sibling of hyprglass, not nested inside it)
+
+      # Custom shiki-cli derivation
       shiki-cli = pkgs.rustPlatform.buildRustPackage {
         pname = "shiki-cli";
-        version = "unstable-2026-08-08"; # bump this when you update the shiki-src input
+        version = "unstable-2026-08-08";
         src = inputs.shiki-src;
-        cargoHash = "sha256-TMExeM+9Xtt2pIdKUqRegVoMYriDaBH5zPvNBXo0Vk4=";
+        cargoHash = "sha256-1A4x/1cqpXR35bU2X6WpwPNt0uj9TSgQ3JJPZDBQPtw=";
         nativeBuildInputs = with pkgs; [ pkg-config ];
         buildInputs = with pkgs; [ openssl ];
         OPENSSL_NO_VENDOR = 1;
@@ -98,17 +100,19 @@ OPENSSL_NO_VENDOR= 1;
           mainProgram = "shiki";
         };
       };
-      # Custom retrosmart-x11-cursors derivation (sibling of hyprglass/shiki-cli)
+
+      # Custom retrosmart-x11-cursors derivation
+      # Custom retrosmart-x11-cursors derivation
       retrosmart-cursors = pkgs.stdenv.mkDerivation rec {
         pname = "retrosmart-x11-cursors";
         version = "unstable-2025-01-13";
         src = pkgs.fetchFromGitHub {
           owner = "mdomlop";
           repo = "retrosmart-x11-cursors";
-          rev = "master"; # pin to a commit sha once confirmed working
+          rev = "master";
           sha256 = "sha256-smsC02aDdOWlNfk+1/lVwH41qDCpPDxePDbrmou8M/4=";
         };
-        nativeBuildInputs = with pkgs; [ imagemagick xorg.xcursorgen ];
+        nativeBuildInputs = with pkgs; [ imagemagick xcursorgen ]; # Changed xorg.xcursorgen -> xcursorgen
         installFlags = [ "DESTDIR=${placeholder "out"}" "PREFIX=" ];
         meta = with pkgs.lib; {
           description = "Old-fashioned X11 cursor theme inspired by Windows 3.x and OS X";

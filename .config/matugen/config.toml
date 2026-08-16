@@ -1,11 +1,11 @@
 [config]
+reload_apps = true
+mode = "dark"
 
-[templates.kitty]
-input_path = '~/.config/matugen/templates/kitty.conf'
-output_path = '~/.config/kitty/colors.conf'
-post_hook = 'pkill -USR1 kitty'
+[templates.rofi_launcher]
+input_path = '~/.config/matugen/templates/colors-rofi.rasi'
+output_path = '~/.cache/colors-rofi.rasi'
 
-[templates.waybar]
-input_path = '~/.config/matugen/templates/waybar.css'
-output_path = '~/.config/waybar/colors.css'
-post_hook = 'pkill -SIGUSR2 waybar'
+[templates.rofi_wallpaper]
+input_path = '~/.config/matugen/templates/wallpaper-rofi.rasi'
+output_path = '~/.cache/wallpaper-rofi.rasi'
