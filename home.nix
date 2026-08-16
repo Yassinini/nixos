@@ -1,21 +1,54 @@
-{ config, pkgs, inputs, hyprglass, shiki-cli, retrosmart-cursors,  ... }:
+{ config, pkgs, inputs, hyprglass, shiki-cli, retrosmart-cursors, ... }:
 
 {
+  ############################################################
+  # Core Home Manager Identity
+  ############################################################
   home.username = "suupatruupa";
   home.homeDirectory = "/home/suupatruupa";
   home.stateVersion = "26.05";
 
+  # Let home-manager manage itself
+  programs.home-manager.enable = true;
 
-home.pointerCursor = {
-  gtk.enable = true;
-  x11.enable = true;
-  package = retrosmart-cursors;
-  name = "retrosmart-xcursor-black";
-  size = 34;
-};
+  ############################################################
+  # Cursor Theme
+  ############################################################
+  home.pointerCursor = {
+    enable = true;
+    gtk.enable = true;
+    x11.enable = true;
+    package = retrosmart-cursors;
+    name = "retrosmart-xcursor-black";
+    size = 34;
+  };
 
+  ############################################################
+  # GTK / QT Theming
+  ############################################################
+  gtk = {
+    enable = true;
+    font = {
+      name = "JetBrainsMono Nerd Font";
+      size = 11;
+    };
+  };
 
-home.packages = with pkgs; [
+  qt = {
+    enable = true;
+    style.name = "adwaita-dark";
+  };
+
+  home.sessionVariables = {
+    GTK_THEME = "Adwaita:dark";
+    QT_STYLE_OVERRIDE = "adwaita-dark";
+    GI_TYPELIB_PATH = "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0";
+  };
+
+  ############################################################
+  # Packages
+  ############################################################
+  home.packages = with pkgs; [
     rofi
     gtk4
     gtk4-layer-shell
@@ -26,90 +59,135 @@ home.packages = with pkgs; [
       google-auth-oauthlib
       google-api-python-client
     ]))
-    wallust
     jq
     swaynotificationcenter
     brightnessctl
     networkmanagerapplet
     nwg-look
-    gtk4-layer-shell
     gum
     shiki-cli
 
-# suupathing
- (writeShellScriptBin "suupa" ''
-    setsid -f kitty -e spotatui >/dev/null 2>&1
-    setsid -f kitty -e lavat >/dev/null 2>&1
-    setsid -f kitty -e discordo >/dev/null 2>&1
-  '')
-
-];
-# apps="discordo spotatui yazi btop lavat cmatrix asciiquarium nyancat nvim "
-
-
-  # Pull in Caelestia's home-manager module
-  imports = [
-    inputs.caelestia-shell.homeManagerModules.default
+    # suupathing — quick-launch script for a few TUI apps in kitty
+    (writeShellScriptBin "suupa" ''
+      setsid -f kitty -e spotatui >/dev/null 2>&1
+      setsid -f kitty -e lavat >/dev/null 2>&1
+      setsid -f kitty -e discordo >/dev/null 2>&1
+    '')
   ];
 
-
-  programs.caelestia = {
-    enable = true;
-    cli.enable = true; # adds the `caelestia` command to your PATH
-  };
-
-   programs.direnv = {
+  ############################################################
+  # Shell Integrations
+  ############################################################
+  programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
   };
 
-  # Let home-manager manage itself
-  programs.home-manager.enable = true;
+  programs.zoxide = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    enableFishIntegration = true;
+  };
 
-# ZOXIDE
-programs.zoxide = {
-  enable = true;
-  enableBashIntegration = true; # Set to true for your preferred shell
-  enableZshIntegration = true;
-  enableFishIntegration = true;
-};
-  # Minimal Hyprland config to auto-start Caelestia on login.
-  # You can replace/expand this later with the full caelestia-dots hyprland.conf.
-wayland.windowManager.hyprland.plugins = [
-  hyprglass
-];
-  
-wayland.windowManager.hyprland.settings = {
-  exec-once = [
-    "caelestia shell -d"
-    "hyprpaper --wait -c /home/suupatruupa/.config/hypr/hyprpaper.conf"
+  programs.bash.enable = true;
+
+  programs.fish = {
+    enable = true;
+
+    interactiveShellInit = ''
+      cd ~/.nixos
+      set -gx GI_TYPELIB_PATH "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0"
+
+      set fish_greeting
+
+      # Keep the Hyprland instance signature up to date.
+      if command -sq hyprctl
+          set -l inst (hyprctl instances 2>/dev/null | awk '/^instance / {print $2}' | string trim -r -c :)
+          if test -n "$inst"
+              set -gx HYPRLAND_INSTANCE_SIGNATURE $inst
+          end
+      end
+
+      if status is-interactive; and not set -q TMUX
+          exec tmux new-session
+      end
+
+      if status is-interactive
+          set -gx STARSHIP_CONFIG "$HOME/.config/starship.toml"
+          starship init fish | source
+          fastfetch
+      end
+    '';
+
+    functions = {
+      com = ''
+        set -l msg $argv
+        if test -z "$msg"
+          set msg "update"
+        end
+        cd ~/.nixos
+        git add -A
+        git commit -m "$msg"
+        git push
+      '';
+
+      sync = ''
+        bash ~/.nixos/scripts/collect-dotfiles.sh
+        sudo nixos-rebuild switch --flake ~/.nixos#nixos
+        cd ~/.nixos
+        git add -A
+        git commit -m "sync $(date '+%Y-%m-%d %H:%M')"
+        git push
+      '';
+    };
+  };
+
+  home.shellAliases = {
+    steam = "WAYLAND_DISPLAY= SDL_VIDEODRIVER=x11 steam";
+    fih = "asciiquarium";
+    scr = "gpu-screen-recorder -w screen -f 60 -a \"default_output\" -o ~/Videos/Recordings/recording_\$(date +%Y-%m-%d_%H-%M-%S).mp4";
+    scrH = "gpu-screen-recorder -w screen -f 60 -a \"default_output\" -q very_high -o ~/Videos/Recordings/recording_\$(date +%Y-%m-%d_%H-%M-%S).mp4";
+    yup = "~/.local/bin/yeup";
+    rebuild = "sudo nixos-rebuild switch --flake ~/.nixos#nixos";
+    bk = "cd ~/.nixos";
+    hyprset = "nix-shell -p python312 python312Packages.pygobject3 gtk4 libadwaita gobject-introspection cairo pkg-config uv lua5_4 glib --run 'export XDG_DATA_DIRS=\"$GSETTINGS_SCHEMAS_PATH:$XDG_DATA_DIRS\"; hyprmod'";
+  };
+
+  ############################################################
+  # Hyprland
+  ############################################################
+  wayland.windowManager.hyprland.plugins = [
+    hyprglass
   ];
 
-  env = [
-    "AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1"
-    "LIBVA_DRIVER_NAME,nvidia"
-    "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-    "WLR_NO_HARDWARE_CURSORS,1"
-    "NIXOS_OZONE_WL,1"
-    "__EGL_VENDOR_LIBRARY_FILENAMES,/run/opengl-driver/share/glvnd/egl_vendor.d/50_nvidia.json"
-    "OGL_FORCE_SOFTWARE,0"
-    "QT_QPA_PLATFORM,wayland;xcb"
-    "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
-  ];
+  wayland.windowManager.hyprland.settings = {
+    exec-once = [
+      "hyprpaper --wait -c /home/suupatruupa/.config/hypr/hyprpaper.conf"
+    ];
 
-  bind = [
-    "SUPER, Q, exec, kitty"
-    "SUPER, C, killactive"
-    "SUPER, M, exit"
-    "SUPER, Super_L, exec, caelestia shell -d"
-    "SUPER SHIFT, K, exec, /home/suupatruupa/.config/hypr/scripts/wallpaper_picker.sh"
-  ];
-};
+    env = [
+      "AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1"
+      "LIBVA_DRIVER_NAME,nvidia"
+      "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+      "WLR_NO_HARDWARE_CURSORS,1"
+      "NIXOS_OZONE_WL,1"
+      "__EGL_VENDOR_LIBRARY_FILENAMES,/run/opengl-driver/share/glvnd/egl_vendor.d/50_nvidia.json"
+      "OGL_FORCE_SOFTWARE,0"
+      "QT_QPA_PLATFORM,wayland;xcb"
+      "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+    ];
 
+    bind = [
+      "SUPER, Q, exec, kitty"
+      "SUPER, C, killactive"
+      "SUPER, M, exit"
+      "SUPER, L, exec, loginctl lock-session"   # TODO: debug — likely needs hyprlock/swaylock hooked to logind for a visible lock screen
+      "SUPER SHIFT, K, exec, /home/suupatruupa/.config/hypr/scripts/wallpaper_picker.sh"
+    ];
+  };
 
-# Register the script file
-# 1. The configuration file to initialize hyprpaper on startup
-# Configuration file to initialize hyprpaper on startup
+  # hyprpaper: preload/apply wallpaper on startup
   home.file.".config/hypr/hyprpaper.conf" = {
     text = ''
       preload = /home/suupatruupa/Pictures/Wallpapers/wallhaven-1qr6mg.png
@@ -118,147 +196,54 @@ wayland.windowManager.hyprland.settings = {
     '';
   };
 
-  # The script to switch wallpapers dynamically
-home.file.".config/hypr/scripts/wallpaper_picker.sh" = {
-  text = ''
-    #!/usr/bin/env bash
-    DIR="/home/suupatruupa/Pictures/Wallpapers"
-    WOFI="/run/current-system/sw/bin/wofi"
-    NOTIFY="/run/current-system/sw/bin/notify-send"
+  # Wallpaper picker script (wofi-based dynamic switcher)
+  home.file.".config/hypr/scripts/wallpaper_picker.sh" = {
+    text = ''
+      #!/usr/bin/env bash
+      DIR="/home/suupatruupa/Pictures/Wallpapers"
+      WOFI="/run/current-system/sw/bin/wofi"
+      NOTIFY="/run/current-system/sw/bin/notify-send"
 
-    SELECTION=$(ls "$DIR" | $WOFI --show dmenu -p "Select Wallpaper" \
-        --style ~/.config/wofi/style.css \
-        --width 800 \
-        --height 200 \
-        --columns 6)
+      SELECTION=$(ls "$DIR" | $WOFI --show dmenu -p "Select Wallpaper" \
+          --style ~/.config/wofi/style.css \
+          --width 800 \
+          --height 200 \
+          --columns 6)
 
-    if [ -n "$SELECTION" ]; then
-        IMAGE="$DIR/$SELECTION"
-        if [ -f "$IMAGE" ]; then
-            hyprctl hyprpaper unload all
-            hyprctl hyprpaper preload "$IMAGE"
-            hyprctl hyprpaper wallpaper "eDP-1,$IMAGE"
-            $NOTIFY "Wallpaper" "Applied: $SELECTION"
-        fi
-    fi
-  '';
-  executable = true;
-};
-
-
-
-gtk = {
-    enable = true;
-    font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 11;
-    };
+      if [ -n "$SELECTION" ]; then
+          IMAGE="$DIR/$SELECTION"
+          if [ -f "$IMAGE" ]; then
+              hyprctl hyprpaper unload all
+              hyprctl hyprpaper preload "$IMAGE"
+              hyprctl hyprpaper wallpaper "eDP-1,$IMAGE"
+              $NOTIFY "Wallpaper" "Applied: $SELECTION"
+          fi
+      fi
+    '';
+    executable = true;
   };
 
-qt = {
-  enable = true;
-  style.name = "adwaita-dark";
-};
+  ############################################################
+  # Desktop Entries
+  ############################################################
+  xdg.desktopEntries.steam = {
+    name = "Steam";
+    exec = "env WAYLAND_DISPLAY= SDL_VIDEODRIVER=x11 steam %U";
+    icon = "steam";
+    type = "Application";
+    categories = [ "Game" "Network" ];
+    terminal = false;
+  };
 
-home.sessionVariables = {
-  GTK_THEME = "Adwaita:dark";
-  QT_STYLE_OVERRIDE = "adwaita-dark";
-  GI_TYPELIB_PATH = "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0";
-};
-programs.fish.functions.com = ''
-  set -l msg $argv
-  if test -z "$msg"
-    set msg "update"
-  end
-  cd ~/.nixos
-  git add -A
-  git commit -m "$msg"
-  git push
-'';
-
-programs.fish = {
-  enable = true;
-
-  interactiveShellInit = ''
-  cd ~/.nixos  
-  set -gx GI_TYPELIB_PATH "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0"
-
-    set fish_greeting
-
-    # Keep the Hyprland instance signature up to date.
-    if command -sq hyprctl
-        set -l inst (hyprctl instances 2>/dev/null | awk '/^instance / {print $2}' | string trim -r -c :)
-        if test -n "$inst"
-            set -gx HYPRLAND_INSTANCE_SIGNATURE $inst
-        end
-    end
-
-    if status is-interactive; and not set -q TMUX
-        fish -c '
-            ~/.local/bin/caelestia-to-alacritty.py
-            while true
-                inotifywait -e modify -e create -e moved_to -q ~/.local/state/caelestia/ | grep -q scheme.json
-                and ~/.local/bin/caelestia-to-alacritty.py
-                and touch ~/.config/alacritty/alacritty.toml
-            end
-        ' &
-        disown
-    end
-
-    if status is-interactive; and not set -q TMUX
-        exec tmux new-session
-    end
-
-    if status is-interactive
-        set -gx STARSHIP_CONFIG "$HOME/.config/starship.toml"
-
-        if test -f "$HOME/.cache/wal/sequences"
-            cat "$HOME/.cache/wal/sequences" &
-        end
-
-        starship init fish | source
-        fastfetch
-    end
-  '';
-};
-programs.fish.functions.sync = ''
-  bash ~/.nixos/scripts/collect-dotfiles.sh
-  sudo nixos-rebuild switch --flake ~/.nixos#nixos
-  cd ~/.nixos
-  git add -A
-  git commit -m "sync $(date '+%Y-%m-%d %H:%M')"
-  git push
-'';
-
-
-home.shellAliases = {
-  steam = "WAYLAND_DISPLAY= SDL_VIDEODRIVER=x11 steam";
-  fih = "asciiquarium";
-  scr  = "gpu-screen-recorder -w screen -f 60 -a \"default_output\" -o ~/Videos/Recordings/recording_\$(date +%Y-%m-%d_%H-%M-%S).mp4";
-    scrH = "gpu-screen-recorder -w screen -f 60 -a \"default_output\" -q very_high -o ~/Videos/Recordings/recording_\$(date +%Y-%m-%d_%H-%M-%S).mp4";
-  yup = "~/.local/bin/yeup";
-  rebuild = "sudo nixos-rebuild switch --flake ~/.nixos#nixos";
-  bk = "cd ~/.nixos";
-    hyprset = "nix-shell -p python312 python312Packages.pygobject3 gtk4 libadwaita gobject-introspection cairo pkg-config uv lua5_4 glib --run 'export XDG_DATA_DIRS=\"$GSETTINGS_SCHEMAS_PATH:$XDG_DATA_DIRS\"; hyprmod'";
- };
-
-programs.bash = {
-  enable = true;
-};
-xdg.desktopEntries.steam = {
-  name = "Steam";
-  exec = "env WAYLAND_DISPLAY= SDL_VIDEODRIVER=x11 steam %U";
-  icon = "steam";
-  type = "Application";
-  categories = [ "Game" "Network" ];
-  terminal = false;
-};
-
-
-
-home.file.".local/bin/yurrr".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/local-bin/yurrr";
+  ############################################################
+  # Local Scripts (live-editable symlinks)
+  ############################################################
+  home.file.".local/bin/yurrr".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/local-bin/yurrr";
   home.file.".local/bin/yeup".source  = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/local-bin/yeup";
 
+  ############################################################
+  # Dotfiles (live-editable symlinks)
+  ############################################################
   xdg.configFile = {
     "tmux".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/tmux";
     "fastfetch".source      = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/fastfetch";
@@ -270,10 +255,9 @@ home.file.".local/bin/yurrr".source = config.lib.file.mkOutOfStoreSymlink "/home
     "spicetify".source      = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/spicetify";
     "swaync".source         = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/swaync";
     "spotify-player".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/spotify-player";
-   "glava".source    = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/glava";
-    "nvim".source     = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/nvim";
-    "btop".source     = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/btop";
-    "sptlrx".source   = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/sptlrx";
-    "waypaper".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/waypaper";
+    "glava".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/glava";
+    "nvim".source            = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/nvim";
+    "btop".source            = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/btop";
+    "sptlrx".source          = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/sptlrx";
   };
 }

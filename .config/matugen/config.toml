@@ -1,11 +1,16 @@
 [config]
 reload_apps = true
-mode = "dark"
+
+[templates.kitty]
+input_path = '/home/suupatruupa/.config/matugen/templates/colors-kitty.conf'
+output_path = '/home/suupatruupa/.config/kitty/colors-matugen.conf'
+post_hook = 'pkill -USR1 kitty'
 
 [templates.rofi_launcher]
-input_path = '~/.config/matugen/templates/colors-rofi.rasi'
-output_path = '~/.cache/colors-rofi.rasi'
+input_path = '/home/suupatruupa/.config/matugen/templates/colors-rofi.rasi'
+output_path = '/home/suupatruupa/.cache/colors-rofi.rasi'
 
 [templates.rofi_wallpaper]
-input_path = '~/.config/matugen/templates/wallpaper-rofi.rasi'
-output_path = '~/.cache/wallpaper-rofi.rasi'
+input_path = '/home/suupatruupa/.config/matugen/templates/wallpaper-rofi.rasi'
+output_path = '/home/suupatruupa/.cache/wallpaper-rofi.rasi'
+

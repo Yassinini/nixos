@@ -1,40 +1,39 @@
 {
   description = "NixOS Flake Configuration";
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     shiki-src = {
       url = "github:sazardev/shiki";
       flake = false;
     };
-    caelestia-shell = {
-      url = "github:caelestia-dots/shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    caelestia-cli = {
-      url = "github:caelestia-dots/cli";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
     quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pixie-sddm = {
-      url = "github:xCaptaiN09/pixie-sddm";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
-  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, quickshell, spicetify-nix, pixie-sddm, ... }@inputs:
+
+  outputs = { self, nixpkgs, home-manager, quickshell, spicetify-nix, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      
-      # Custom hyprglass derivation (Updated to main branch for modern Hyprland compatibility)
-        hyprglass = pkgs.stdenv.mkDerivation {
+
+      ##########################################################
+      # Custom Derivations
+      ##########################################################
+
+      # hyprglass — Hyprland plugin, built from main branch for
+      # modern Hyprland compatibility
+      hyprglass = pkgs.stdenv.mkDerivation {
         pname = "hyprglass";
         version = "unstable-2026-08";
         src = pkgs.fetchFromGitHub {
@@ -84,7 +83,7 @@
         '';
       };
 
-      # Custom shiki-cli derivation
+      # shiki-cli — TUI note-taking app, git-native notebooks
       shiki-cli = pkgs.rustPlatform.buildRustPackage {
         pname = "shiki-cli";
         version = "unstable-2026-08-08";
@@ -101,8 +100,7 @@
         };
       };
 
-      # Custom retrosmart-x11-cursors derivation
-      # Custom retrosmart-x11-cursors derivation
+      # retrosmart-cursors — X11 cursor theme
       retrosmart-cursors = pkgs.stdenv.mkDerivation rec {
         pname = "retrosmart-x11-cursors";
         version = "unstable-2025-01-13";
@@ -112,7 +110,7 @@
           rev = "master";
           sha256 = "sha256-smsC02aDdOWlNfk+1/lVwH41qDCpPDxePDbrmou8M/4=";
         };
-        nativeBuildInputs = with pkgs; [ imagemagick xcursorgen ]; # Changed xorg.xcursorgen -> xcursorgen
+        nativeBuildInputs = with pkgs; [ imagemagick xcursorgen ];
         installFlags = [ "DESTDIR=${placeholder "out"}" "PREFIX=" ];
         meta = with pkgs.lib; {
           description = "Old-fashioned X11 cursor theme inspired by Windows 3.x and OS X";

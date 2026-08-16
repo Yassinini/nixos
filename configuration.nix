@@ -8,7 +8,9 @@ let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
 {
-  # Imports & System Settings
+  ############################################################
+  # Imports & Core System Settings
+  ############################################################
   imports = [
     ./hardware-configuration.nix
   ];
@@ -29,6 +31,9 @@ in
     })
   ];
 
+  nixpkgs.config.allowUnfree = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   environment.shellAliases = {
     lock = "loginctl lock-session";
   };
@@ -38,14 +43,15 @@ in
     memoryPercent = 20;
   };
 
-  # Global Home Manager Settings
+  ############################################################
+  # Home Manager (Spicetify + Hakuspace Dotfiles)
+  ############################################################
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    backupFileExtension = "backup";   
-  extraSpecialArgs = { inherit inputs hyprglass; };
+    backupFileExtension = "backup";
+    extraSpecialArgs = { inherit inputs hyprglass; };
 
-    # User Configurations
     users.suupatruupa = { pkgs, ... }: {
       imports = [
         # Spicetify HM module
@@ -55,20 +61,7 @@ in
         ({ ... }: {
           programs.spicetify = {
             enable = true;
-
-            theme = {
-              name = "vesper";
-              src = pkgs.fetchFromGitHub {
-                owner = "bdsqqq";
-                repo = "spicetify-vesper-theme";
-                rev = "main";
-                hash = "sha256-BygDAh8AKb6J08pM/v5YNA04vSiEpC3USHmCjWHxaEc=";
-              };
-              injectCss = true;
-              replaceColors = true;
-              overwriteAssets = true;
-            };
-
+            theme = spicePkgs.themes.text;
             enabledCustomApps = with spicePkgs.apps; [
               marketplace
               newReleases
@@ -95,21 +88,23 @@ in
         "hakuspace".source = pkgs.lib.mkForce ./dotfiles/hakuspace;
         "waybar".source = pkgs.lib.mkForce ./dotfiles/waybar;
       };
-     };
+    };
+  };
+
+  ############################################################
+  # User Accounts
+  ############################################################
+  users.users."suupatruupa" = {
+    isNormalUser = true;
+    description = "suupatruupa";
+    extraGroups = [ "networkmanager" "wheel" "bluetooth" "video" "audio" ];
   };
 
   programs.fish.enable = true;
 
-  users.users.finley = {
-    isNormalUser = true;
-    shell = pkgs.fish;
-    group = "finley";
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
-  };
-
-  users.groups.finley = {};
-
+  ############################################################
   # Power & Session Management
+  ############################################################
   services.logind.settings.Login.HandleLidSwitch = "ignore";
   systemd.targets.sleep.enable = false;
   systemd.targets.suspend.enable = false;
@@ -119,7 +114,9 @@ in
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
 
-  # Bootloader Configuration
+  ############################################################
+  # Bootloader
+  ############################################################
   boot.loader.systemd-boot.enable = false;
   boot.loader.grub = {
     enable = true;
@@ -134,16 +131,15 @@ in
     }}/bsol";
   };
   boot.loader.efi.canTouchEfiVariables = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Terminal & Display Driver Kernel Parameters
-  programs.starship.enable = true;
   boot.kernelParams = [ "acpi_backlight=video" ];
+  boot.initrd.kernelModules = [ "nvidia" ];
 
+  ############################################################
+  # Networking & Regional Settings
+  ############################################################
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
-  # Regional & Localization
   time.timeZone = "Africa/Cairo";
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
@@ -158,10 +154,17 @@ in
     LC_TIME = "en_US.UTF-8";
   };
 
-  # X11 & Display Managers
+  ############################################################
+  # Display Manager, X11 & Hyprland
+  ############################################################
   services.xserver.enable = true;
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
 
   services.greetd = {
     enable = true;
@@ -183,7 +186,6 @@ in
     TTYVTDisallocate = true;
   };
 
-  # Hyprland & Wayland Portals
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -194,12 +196,9 @@ in
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Printing & Audio Services
+  ############################################################
+  # Printing & Audio
+  ############################################################
   services.printing.enable = true;
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -210,17 +209,37 @@ in
     pulse.enable = true;
   };
 
-  # User Account Definition
-  users.users."suupatruupa" = {
-    isNormalUser = true;
-    description = "suupatruupa";
-    extraGroups = [ "networkmanager" "wheel" "bluetooth" "video" "audio" ];
+  ############################################################
+  # Bluetooth & Misc Hardware Services
+  ############################################################
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  services.blueman.enable = true;
+  services.flatpak.enable = true;
+
+  ############################################################
+  # Program Configurations
+  ############################################################
+  programs.firefox.enable = true;
+  programs.starship.enable = true;
+  programs.gpu-screen-recorder.enable = true;
+
+  programs.tmux = {
+    enable = true;
+    clock24 = true;
+    keyMode = "vi";
   };
 
-  programs.firefox.enable = true;
-  nixpkgs.config.allowUnfree = true;
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+  };
 
-  # Combined System Packages & Hakuspace Stack
+  ############################################################
+  # System Packages
+  ############################################################
   environment.systemPackages = with pkgs; [
     # Core Wayland & Hakuspace Infrastructure
     waybar
@@ -275,7 +294,6 @@ in
     obsidian
     steam
     prismlauncher
-    waypaper
     mpvpaper
     davinci-resolve
     localsend
@@ -295,9 +313,9 @@ in
     asciiquarium
     cmatrix
     mapscii
-    wallust
     glava
     tuigreet
+    matugen
 
     # Development & Compilers
     cmake
@@ -333,42 +351,31 @@ in
     commit-mono
     qt6.qtsvg
     qt6.qtimageformats
-   
 
-matugen
-#myappshere  
-];
+    # myappshere
+  ];
 
-  # Container Services
+  ############################################################
+  # Fonts
+  ############################################################
+  fonts.fontconfig.defaultFonts = {
+    serif = [ "JetBrainsMono Nerd Font" ];
+    sansSerif = [ "JetBrainsMono Nerd Font" ];
+    monospace = [ "JetBrainsMono Nerd Font" ];
+  };
+
+  ############################################################
+  # Containers
+  ############################################################
   virtualisation.oci-containers.containers.waha = {
     image = "devlikeapro/waha";
     ports = [ "3000:3000" ];
     autoStart = true;
   };
 
-  # Program Configurations
-  programs.gpu-screen-recorder.enable = true;
-
-  programs.tmux = {
-    enable = true;
-    clock24 = true;
-    keyMode = "vi";
-  };
-
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-  };
-
-  # Hardware Support & Services
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-  services.blueman.enable = true;
-  services.flatpak.enable = true;
-
-  # NVIDIA GPU Configuration
+  ############################################################
+  # NVIDIA GPU
+  ############################################################
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -424,8 +431,6 @@ matugen
   systemd.services.nvidia-hibernate.enable = true;
   systemd.services.nvidia-resume.enable = true;
 
-  boot.initrd.kernelModules = [ "nvidia" ];
-
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "nvidia";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
@@ -434,7 +439,9 @@ matugen
     __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
   };
 
+  ############################################################
   # Nix-LD Binary Compatibility Layer
+  ############################################################
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
@@ -458,13 +465,6 @@ matugen
       freetype
       libxkbfile
     ];
-  };
-
-  # System Fonts
-  fonts.fontconfig.defaultFonts = {
-    serif = [ "JetBrainsMono Nerd Font" ];
-    sansSerif = [ "JetBrainsMono Nerd Font" ];
-    monospace = [ "JetBrainsMono Nerd Font" ];
   };
 
   system.stateVersion = "26.05";
