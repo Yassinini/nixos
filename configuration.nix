@@ -121,12 +121,13 @@ nixpkgs.config.allowUnfree = true;
   ############################################################
   # Bootloader
   ############################################################
-  boot.loader.systemd-boot.enable = false;
+boot.loader.systemd-boot.enable = false;
   boot.loader.grub = {
     enable = true;
     efiSupport = true;
     device = "nodev";
     useOSProber = true;
+    configurationLimit = 5; # Keeps only the last 5 generations in /boot
     theme = "${pkgs.fetchFromGitHub {
       owner = "harishnkr";
       repo = "bsol";
