@@ -152,6 +152,11 @@
     };
   };
 
+programs.fzf = {
+  enable = true;
+  enableFishIntegration = true;
+};
+
   home.shellAliases = {
     steam = "WAYLAND_DISPLAY= SDL_VIDEODRIVER=x11 steam";
     fih = "asciiquarium";
