@@ -22,18 +22,19 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1786599213,
-        "narHash": "sha256-yNJd40f11EzXBjSByCB7IPpeFFAdeoSKKM67dGkfFoU=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "0e251e24a4f24e036a084b6b4b2d2491af4167f4",
-        "type": "github"
+        "lastModified": 1786862985,
+        "narHash": "sha256-FBJRXmbGXiSUDvYEbfLYRkckayyZ6SK1UEqhCrIZ2Cs=",
+        "ref": "nixos-unstable",
+        "rev": "e5bdc4a41d4c072fe1e3787eaa0320a384741d44",
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/NixOS/nixpkgs.git"
       },
       "original": {
-        "owner": "nixos",
         "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/NixOS/nixpkgs.git"
       }
     },
     "nixpkgs_2": {
@@ -104,15 +105,15 @@
       "locked": {
         "lastModified": 1786855359,
         "narHash": "sha256-yeKMWFCPeoIKmPBLLvP1/15ulOJO8i9ZIlSSXGuW6aw=",
-        "owner": "Gerg-L",
-        "repo": "spicetify-nix",
+        "ref": "refs/heads/master",
         "rev": "0f478ff79b82abb785160cd4531293f61d21be86",
-        "type": "github"
+        "revCount": 1021,
+        "type": "git",
+        "url": "https://github.com/Gerg-L/spicetify-nix.git"
       },
       "original": {
-        "owner": "Gerg-L",
-        "repo": "spicetify-nix",
-        "type": "github"
+        "type": "git",
+        "url": "https://github.com/Gerg-L/spicetify-nix.git"
       }
     },
     "systems": {

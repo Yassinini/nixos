@@ -2,24 +2,24 @@
   description = "NixOS Flake Configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+     nixpkgs.url = "git+https://github.com/NixOS/nixpkgs.git?ref=nixos-unstable&shallow=1";
 
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+     home-manager = {
+       url = "github:nix-community/home-manager";
+       inputs.nixpkgs.follows = "nixpkgs";
+     };
 
-    shiki-src = {
-      url = "github:sazardev/shiki";
-      flake = false;
-    };
+     shiki-src = {
+       url = "github:sazardev/shiki";
+       flake = false;
+     };
 
-    quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+     quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
 
-    spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+spicetify-nix = {
+  url = "git+https://github.com/Gerg-L/spicetify-nix.git";
+  inputs.nixpkgs.follows = "nixpkgs";
+};
   };
 
   outputs = { self, nixpkgs, home-manager, quickshell, spicetify-nix, ... }@inputs:

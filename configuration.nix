@@ -33,7 +33,10 @@ in
 
 nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+ nix.settings = {
+  experimental-features = [ "nix-command" "flakes" ];
+  flake-registry = "";
+};
 
   environment.shellAliases = {
     lock = "loginctl lock-session";
