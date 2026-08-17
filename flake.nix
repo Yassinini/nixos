@@ -121,11 +121,12 @@ spicetify-nix = {
       };
     in
     {
-      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors; };
-        modules = [
-          ./configuration.nix
+          nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+  specialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors; };
+  modules = [
+    { nixpkgs.hostPlatform = system; } # Modern replacement
+    ./configuration.nix
+
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
