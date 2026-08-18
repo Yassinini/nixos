@@ -106,17 +106,21 @@ nixpkgs.config.allowUnfree = true;
 
   programs.fish.enable = true;
 
-  ############################################################
-  # Power & Session Management
-  ############################################################
-  services.logind.settings.Login.HandleLidSwitch = "ignore";
-  systemd.targets.sleep.enable = false;
-  systemd.targets.suspend.enable = false;
-  systemd.targets.hibernate.enable = false;
-  systemd.targets.hybrid-sleep.enable = false;
+############################################################
+# Power & Session Management
+############################################################
+services.logind.settings.Login = {
+  HandleLidSwitch = "suspend";
+  IdleAction = "ignore";
+  IdleActionSec = 0;
+};
+systemd.targets.sleep.enable = true;
+systemd.targets.suspend.enable = true;
+systemd.targets.hibernate.enable = true;
+systemd.targets.hybrid-sleep.enable = true;
+services.gnome.gnome-keyring.enable = true;
+security.pam.services.login.enableGnomeKeyring = true;
 
-  services.gnome.gnome-keyring.enable = true;
-  security.pam.services.login.enableGnomeKeyring = true;
 
   ############################################################
   # Bootloader
@@ -371,6 +375,8 @@ xdg.portal = {
     bluetuith
     
 fzf
+pkgs.vscodium
+
 # myappshere
   ];
 programs.zoom-us.enable = true;
@@ -410,6 +416,11 @@ programs.zoom-us.enable = true;
     package = config.boot.kernelPackages.nvidiaPackages.production;
     dynamicBoost.enable = true;
   };
+hardware.nvidia.prime = {
+  offload.enable = true;  # or sync.enable, depending on your use case
+  intelBusId = "PCI:0:2:0";  # from lspci
+  nvidiaBusId = "PCI:1:0:0"; # from lspci
+};
 
   systemd.services.nvidia-max-power = {
     description = "Set NVIDIA GPU Power Limit to 85W";

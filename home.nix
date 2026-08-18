@@ -309,7 +309,7 @@ programs.fzf = {
   ############################################################
   home.file.".local/bin/yurrr".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/local-bin/yurrr";
   home.file.".local/bin/yeup".source  = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/local-bin/yeup";
-
+home.file.".local/bin/yayyy".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/local-bin/yayyy";
   ############################################################
   # Dotfiles (live-editable symlinks)
   ############################################################

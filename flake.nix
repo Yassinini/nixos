@@ -31,6 +31,7 @@ spicetify-nix = {
       # Custom Derivations
       ##########################################################
 
+
       # hyprglass — Hyprland plugin, built from main branch for
       # modern Hyprland compatibility
       hyprglass = pkgs.stdenv.mkDerivation {
