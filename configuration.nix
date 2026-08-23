@@ -13,7 +13,8 @@ in
   ############################################################
   imports = [
     ./hardware-configuration.nix
-  ];
+  inputs.helium-flake.nixosModules.default  
+];
 
   documentation.man.man-db.enable = false;
 
@@ -381,12 +382,19 @@ pkgs.vscodium
 ntfs3g
 vivaldi
 stremio-service
-
+anki
 
 # myappshere
   ];
 programs.zoom-us.enable = true;
 
+programs.helium = {
+  enable = true;
+  flags = [
+    "--disable-gpu"           # optional; helps with some Wayland/NVIDIA setups
+    "--ozone-platform-hint=auto"
+  ];
+};
 
 ############################################################
   # DRIVE THING TO ACCESS WINDOWS

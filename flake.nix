@@ -18,13 +18,18 @@
 
     quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
 
+	helium-flake = {
+    url = "github:oxcl/nix-flake-helium-browser";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
     spicetify-nix = {
       url = "git+https://github.com/Gerg-L/spicetify-nix.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-flatpak, quickshell, spicetify-nix, ... }@inputs:
+    outputs = { self, nixpkgs, home-manager, nix-flatpak, quickshell, spicetify-nix, helium-flake, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -116,7 +121,7 @@
     in
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors; };
+        specialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors helium-flake; };
         modules = [
           { nixpkgs.hostPlatform = system; }
           nix-flatpak.nixosModules.nix-flatpak
