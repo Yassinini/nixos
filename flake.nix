@@ -2,38 +2,33 @@
   description = "NixOS Flake Configuration";
 
   inputs = {
-     nixpkgs.url = "git+https://github.com/NixOS/nixpkgs.git?ref=nixos-unstable&shallow=1";
+    nixpkgs.url = "git+https://github.com/NixOS/nixpkgs.git?ref=nixos-unstable&shallow=1";
 
-     home-manager = {
-       url = "github:nix-community/home-manager";
-       inputs.nixpkgs.follows = "nixpkgs";
-     };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-     shiki-src = {
-       url = "github:sazardev/shiki";
-       flake = false;
-     };
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
 
-     quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+    shiki-src = {
+      url = "github:sazardev/shiki";
+      flake = false;
+    };
 
-spicetify-nix = {
-  url = "git+https://github.com/Gerg-L/spicetify-nix.git";
-  inputs.nixpkgs.follows = "nixpkgs";
-};
+    quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+
+    spicetify-nix = {
+      url = "git+https://github.com/Gerg-L/spicetify-nix.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, quickshell, spicetify-nix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-flatpak, quickshell, spicetify-nix, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
 
-      ##########################################################
-      # Custom Derivations
-      ##########################################################
-
-
-      # hyprglass — Hyprland plugin, built from main branch for
-      # modern Hyprland compatibility
       hyprglass = pkgs.stdenv.mkDerivation {
         pname = "hyprglass";
         version = "unstable-2026-08";
@@ -84,7 +79,6 @@ spicetify-nix = {
         '';
       };
 
-      # shiki-cli — TUI note-taking app, git-native notebooks
       shiki-cli = pkgs.rustPlatform.buildRustPackage {
         pname = "shiki-cli";
         version = "unstable-2026-08-08";
@@ -101,7 +95,6 @@ spicetify-nix = {
         };
       };
 
-      # retrosmart-cursors — X11 cursor theme
       retrosmart-cursors = pkgs.stdenv.mkDerivation rec {
         pname = "retrosmart-x11-cursors";
         version = "unstable-2025-01-13";
@@ -122,11 +115,12 @@ spicetify-nix = {
       };
     in
     {
-          nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-  specialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors; };
-  modules = [
-    { nixpkgs.hostPlatform = system; } # Modern replacement
-    ./configuration.nix
+      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors; };
+        modules = [
+          { nixpkgs.hostPlatform = system; }
+          nix-flatpak.nixosModules.nix-flatpak
+          ./configuration.nix
 
           home-manager.nixosModules.home-manager
           {

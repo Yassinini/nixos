@@ -75,6 +75,7 @@
     nwg-look
     gum
     shiki-cli
+  pkgs.nvtopPackages.nvidia  
 
     # suupathing — quick-launch script for a few TUI apps in kitty
     (writeShellScriptBin "suupa" ''
@@ -83,6 +84,9 @@
       setsid -f kitty -e discordo >/dev/null 2>&1
     '')
   ];
+programs.btop = {
+  enable = true;
+};
 
   ############################################################
   # Shell Integrations

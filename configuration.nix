@@ -84,6 +84,7 @@ nixpkgs.config.allowUnfree = true;
         })
       ];
 
+
       # hakuspace Dotfiles & Scripts Imports via Home Manager
       xdg.configFile = {
         "rofi".source = pkgs.lib.mkForce ./dotfiles/rofi;
@@ -235,7 +236,9 @@ xdg.portal = {
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
-  services.flatpak.enable = true;
+  services.flatpak = {
+  enable = true;
+};
 
   ############################################################
   # Program Configurations
@@ -294,7 +297,6 @@ xdg.portal = {
     vscode
     neovim
     fastfetch
-    btop
     yazi
     superfile
     zoxide
@@ -376,10 +378,20 @@ xdg.portal = {
     
 fzf
 pkgs.vscodium
+ntfs3g
+vivaldi
+stremio-service
+
 
 # myappshere
   ];
 programs.zoom-us.enable = true;
+
+
+############################################################
+  # DRIVE THING TO ACCESS WINDOWS
+  ############################################################
+boot.supportedFilesystems = [ "ntfs" ];
 
   ############################################################
   # Fonts
