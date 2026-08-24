@@ -4,6 +4,8 @@
 
 { config, pkgs, inputs, hyprglass, ... }:
 
+
+
 let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
@@ -381,12 +383,15 @@ fzf
 pkgs.vscodium
 ntfs3g
 vivaldi
-stremio-service
-anki
+kdePackages.kdeconnect-kde
+unityhub
+
 
 # myappshere
   ];
 programs.zoom-us.enable = true;
+
+programs.kdeconnect.enable = true;
 
 programs.helium = {
   enable = true;
