@@ -111,7 +111,13 @@ if hl and hl.plugin and hl.plugin.hyprglass then
     layers = { enabled = 1 },
     dark = { brightness = 0.85, contrast = 1.1 },
   })
-
+rules = {
+      {
+        match = { title = "^(Picture-in-Picture|Picture in picture)$" },
+        ignore = true,
+      },
+    },
+  })
   -- 4. Success Notification
   if hl.notification then
     hl.notification.create({
@@ -163,6 +169,19 @@ hl.on("hyprland.start", function ()
   hl.exec_cmd("waypaper --restore")
 end)
 
+-- =========================================================================
+-- Picture-in-Picture Exceptions (Zen Browser & General PiP)
+-- =========================================================================
+hl.window_rule({
+  match = {
+    class = "^(app\\.zen_browser\\.zen|firefox|google-chrome|brave-browser)$",
+    title = "^(Picture-in-Picture|Picture in picture)$",
+  },
+  opacity = "1.0 1.0",
+  noblur = true,
+  float = true,
+  pin = true,
+})
 
 ------------------------------
 --------- HYPRLOCK------------
@@ -321,7 +340,16 @@ hl.window_rule({
   },
   opacity = "1.0 1.0"
 })
-
+hl.window_rule({
+  match = {
+    class = "^(app\\.zen_browser\\.zen)$",
+    title = "^(Picture-in-Picture)$"
+  },
+  opacity = "1.0 1.0",
+  noblur = true,
+  float = true,
+  pin = true
+})
 
 -----------------------
 ---- LOOK AND FEEL ----
