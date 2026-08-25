@@ -145,6 +145,15 @@ hl.window_rule({
   match = { class = "^(kitty)$" },
   opacity = "0.5 0.5"
 })
+-- Coverflow Picker Overlay Rules
+hl.window_rule({
+  name = "coverflow-picker-float",
+  match = { class = "^(CoverflowPicker\\.py)$" },
+  float = true,
+  move = "onscreen center",
+  pin = true,
+  stay_focused = true,
+})
 
 -- =========================================================================
 -- 3. AUTOSTART COMMANDS (Only fires once on compositor start)
@@ -560,7 +569,10 @@ end)
 
 
 -- waypaper
-hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("waypaper"))
+-- hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("waypaper"))
+hl.bind("SUPER + SHIFT + W", function()
+    hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/run-coverflow.sh")
+end)
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]

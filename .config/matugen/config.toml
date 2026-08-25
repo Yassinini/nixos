@@ -14,3 +14,13 @@ output_path = '/home/suupatruupa/.cache/colors-rofi.rasi'
 input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/wallpaper-rofi.rasi'
 output_path = '/home/suupatruupa/.cache/wallpaper-rofi.rasi'
 
+# Disabled until you create the files:
+# [templates.waybar]
+# input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/waybar.css'
+# output_path = '/home/suupatruupa/.config/waybar/colors.css'
+# post_hook = 'pkill -USR2 waybar'
+
+# [templates.hyprland]
+# input_path = '/home/suupatruupa/.nixos/.config/matugen/templates/hyprland-colors.conf'
+# output_path = '/home/suupatruupa/.config/hypr/colors.conf'
+# post_hook = 'hyprctl reload'

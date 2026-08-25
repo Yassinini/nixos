@@ -376,7 +376,8 @@ xdg.portal = {
     commit-mono
     qt6.qtsvg
     qt6.qtimageformats
-
+qt6.qtbase
+    qt6.wrapQtAppsHook
     bluetuith
     
 fzf
@@ -386,6 +387,9 @@ vivaldi
 kdePackages.kdeconnect-kde
 unityhub
 inputs.fetch-3d.packages.${pkgs.system}.default
+(python3.withPackages (ps: with ps; [
+    pyside6
+  ]))
 
 # myappshere
   ];
