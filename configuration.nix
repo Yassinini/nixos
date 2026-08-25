@@ -385,7 +385,7 @@ ntfs3g
 vivaldi
 kdePackages.kdeconnect-kde
 unityhub
-
+inputs.fetch-3d.packages.${pkgs.system}.default
 
 # myappshere
   ];

@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "git+https://github.com/NixOS/nixpkgs.git?ref=nixos-unstable&shallow=1";
 
+    fetch-3d.url = "github:areofyl/fetch";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -18,10 +19,10 @@
 
     quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
 
-	helium-flake = {
-    url = "github:oxcl/nix-flake-helium-browser";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
+    helium-flake = {
+      url = "github:oxcl/nix-flake-helium-browser";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     spicetify-nix = {
       url = "git+https://github.com/Gerg-L/spicetify-nix.git";
@@ -29,7 +30,7 @@
     };
   };
 
-    outputs = { self, nixpkgs, home-manager, nix-flatpak, quickshell, spicetify-nix, helium-flake, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-flatpak, quickshell, spicetify-nix, helium-flake, fetch-3d, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -119,44 +120,37 @@
         };
       };
 
-      # FHS environment wrapper for running GameMaker's Ubuntu Beta build
-      # (GameMaker ships a plain Ubuntu-targeted binary, not a nix package,
-      # so it needs an FHS-style sandbox with the libs its docs require).
-      # Usage: unzip the downloaded GameMaker.zip somewhere, then run
-      #   gamemaker-fhs
-      # to drop into a shell with the right libs, and launch the extracted
-      # binary from inside it (e.g. ./GameMaker).
-	gamemaker-fhs = pkgs.buildFHSEnv {
-  name = "gamemaker-fhs";
-  targetPkgs = pkgs: with pkgs; [
-    mesa
-    libGL
-    libGLU
-    openal
-    curl
-    zlib
-    xorg.libXrandr
-    xorg.libXxf86vm
-    pulseaudio
-    ffmpeg
-    fuse
-    fuse3
-    glibc
-    openssl
-    icu
-    bzip2
-    libpng
-    brotli
-  ];
-  extraInstallCommands = ''
-    mkdir -p $out/usr/lib
-    ln -sf ${pkgs.bzip2.out}/lib/libbz2.so.1 $out/usr/lib/libbz2.so.1.0
-  '';
-  profile = ''
-    export LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
-  '';
-  runScript = "bash";
-};
+      gamemaker-fhs = pkgs.buildFHSEnv {
+        name = "gamemaker-fhs";
+        targetPkgs = pkgs: with pkgs; [
+          mesa
+          libGL
+          libGLU
+          openal
+          curl
+          zlib
+          xorg.libXrandr
+          xorg.libXxf86vm
+          pulseaudio
+          ffmpeg
+          fuse
+          fuse3
+          glibc
+          openssl
+          icu
+          bzip2
+          libpng
+          brotli
+        ];
+        extraInstallCommands = ''
+          mkdir -p $out/usr/lib
+          ln -sf ${pkgs.bzip2.out}/lib/libbz2.so.1 $out/usr/lib/libbz2.so.1.0
+        '';
+        profile = ''
+          export LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
+        '';
+        runScript = "bash";
+      };
     in
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
