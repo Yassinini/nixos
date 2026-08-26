@@ -77,12 +77,6 @@
     shiki-cli
   pkgs.nvtopPackages.nvidia  
 
-    # suupathing — quick-launch script for a few TUI apps in kitty
-    (writeShellScriptBin "suupa" ''
-      setsid -f kitty -e spotatui >/dev/null 2>&1
-      setsid -f kitty -e lavat >/dev/null 2>&1
-      setsid -f kitty -e discordo >/dev/null 2>&1
-    '')
 
 gamemaker-fhs
 unzip
@@ -180,9 +174,81 @@ programs.fzf = {
 
 programs.fish.functions = {
   gamemaker = ''
-    setsid gamemaker-fhs -c 'DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 exec ~/Apps/GameMaker/opt/GameMaker-LTS2026/GameMaker' > /dev/null 2>&1 &
+    setsid gamemaker-fhs -c 'DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 exec ~/Apps/GameMaker/opt/GameMaker-LTS2026/GameMaker>
     disown
   '';
+layout = ''
+  tmux kill-session -t main 2>/dev/null
+  tmux new-session -d -s main -c $HOME
+
+  set -l first (tmux display-message -p -t main '#{pane_id}')
+  set -l btoppane (tmux split-window -h -t main -p 55 -c $HOME -P -F '#{pane_id}')
+  sleep 0.3
+  tmux send-keys -t $btoppane 'btop' Enter
+  tmux select-pane -t $btoppane -T btop
+
+  set -l second (tmux split-window -v -t $first -p 50 -c $HOME -P -F '#{pane_id}')
+  sleep 0.3
+
+  set -l first_top (tmux display-message -p -t $first '#{pane_top}')
+  set -l second_top (tmux display-message -p -t $second '#{pane_top}')
+
+  set -l fetchpane
+  set -l termpane
+  if test $first_top -lt $second_top
+    set fetchpane $first
+    set termpane $second
+  else
+    set fetchpane $second
+    set termpane $first
+  end
+
+  tmux send-keys -t $fetchpane 'fetch' Enter
+  tmux select-pane -t $fetchpane -T fetch
+  tmux select-pane -t $termpane -T term
+
+  if set -q TMUX
+    tmux switch-client -t main
+  else
+    tmux attach-session -t main
+  end
+'';
+suupa = ''
+  tmux kill-session -t suupa 2>/dev/null
+  tmux new-session -d -s suupa -c $HOME
+
+  set -l left (tmux display-message -p -t suupa '#{pane_id}')
+  set -l right (tmux split-window -h -t suupa -p 45 -c $HOME -P -F '#{pane_id}')
+  sleep 0.3
+  tmux select-pane -t $right -T term
+
+  set -l second (tmux split-window -v -t $left -p 50 -c $HOME -P -F '#{pane_id}')
+  sleep 0.3
+
+  set -l left_top (tmux display-message -p -t $left '#{pane_top}')
+  set -l second_top (tmux display-message -p -t $second '#{pane_top}')
+
+  set -l discordpane
+  set -l spotapane
+  if test $left_top -lt $second_top
+    set discordpane $left
+    set spotapane $second
+  else
+    set discordpane $second
+    set spotapane $left
+  end
+
+  tmux send-keys -t $discordpane 'discordo' Enter
+  tmux select-pane -t $discordpane -T discordo
+  tmux send-keys -t $spotapane 'spotatui' Enter
+  tmux select-pane -t $spotapane -T spotatui
+
+  if set -q TMUX
+    tmux switch-client -t suupa
+  else
+    tmux attach-session -t suupa
+  end
+'';
 };
 
   ############################################################

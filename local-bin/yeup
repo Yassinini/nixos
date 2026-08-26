@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
-
 # 1. CD into the project folder
 cd "$HOME/Documents/yurrr" || exit 1
 
-# 2. Launch nix-shell with Euporie targeting a new session or a specific file
-nix-shell <<-EOF
-  source .venv/bin/activate
-  euporie notebook
-EOF
+# 2. Launch nix-shell and run euporie inside the venv
+nix-shell --run "source .venv/bin/activate && euporie notebook"
