@@ -347,9 +347,11 @@ xdg.portal = {
     meson
     cpio
     gcc
-    pkg-config
+    gdb    
+pkg-config
     gnumake
-    stdenv.cc.cc.lib
+    clang-tools    
+stdenv.cc.cc.lib
     libxcb
 
     # Python Environment
@@ -390,6 +392,9 @@ inputs.fetch-3d.packages.${pkgs.system}.default
 (python3.withPackages (ps: with ps; [
     pyside6
   ]))
+
+
+mission-center
 
 # myappshere
   ];
