@@ -263,11 +263,11 @@ xdg.portal = {
     vimAlias = true;
   };
 
-  ############################################################
+############################################################
   # System Packages
   ############################################################
   environment.systemPackages = with pkgs; [
-    # Core Wayland & Hakuspace Infrastructure
+    # Core Wayland & Infrastructure
     waybar
     rofi
     swaynotificationcenter
@@ -279,6 +279,7 @@ xdg.portal = {
     wireplumber
     networkmanagerapplet
     xwayland-satellite
+    hyprpolkitagent
 
     # Screen Capture, Clipboard & Utilities
     grim
@@ -298,7 +299,10 @@ xdg.portal = {
     alacritty
     fish
     vscode
+    vscodium
     neovim
+    zed-editor
+    jetbrains.pycharm
     fastfetch
     yazi
     superfile
@@ -330,6 +334,11 @@ xdg.portal = {
     w3m
     astroterm
     ani-cli
+    vivaldi
+    kdePackages.kdeconnect-kde
+    unityhub
+    mission-center
+    bluetuith
 
     # Rice / Aesthetic Toys
     peaclock
@@ -342,17 +351,19 @@ xdg.portal = {
     tuigreet
     matugen
 
-    # Development & Compilers
+    # Development, Compilers & JDK
+    gcc
+    gdb
     cmake
     meson
     cpio
-    gcc
-    gdb    
-pkg-config
+    pkg-config
     gnumake
-    clang-tools    
-stdenv.cc.cc.lib
+    clang-tools
+    stdenv.cc.cc.lib
     libxcb
+    jdk
+    ntfs3g
 
     # Python Environment
     (python3.withPackages (ps: with ps; [
@@ -364,11 +375,15 @@ stdenv.cc.cc.lib
       requests
       plotly
       euporie
+      pyside6
+      numpy
+      pandas
+      matplotlib
     ]))
 
     # Inputs & External Flakes
     inputs.quickshell.packages.${pkgs.system}.default
-    hyprglass
+    inputs.fetch-3d.packages.${pkgs.system}.default
 
     # Fonts & Icons
     papirus-icon-theme
@@ -376,30 +391,19 @@ stdenv.cc.cc.lib
     nerd-fonts.symbols-only
     material-design-icons
     commit-mono
+
+    # Qt Environment
     qt6.qtsvg
     qt6.qtimageformats
-qt6.qtbase
+    qt6.qtbase
     qt6.wrapQtAppsHook
-    bluetuith
-    
-fzf
-pkgs.vscodium
-ntfs3g
-vivaldi
-kdePackages.kdeconnect-kde
-unityhub
-inputs.fetch-3d.packages.${pkgs.system}.default
-(python3.withPackages (ps: with ps; [
-    pyside6
-  ]))
 
-
-mission-center
-
-# myappshere
+#myappshere
   ];
-programs.zoom-us.enable = true;
 
+
+programs.zoom-us.enable = true;
+security.polkit.enable = true;
 programs.kdeconnect.enable = true;
 
 programs.helium = {

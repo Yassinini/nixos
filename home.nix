@@ -1,6 +1,14 @@
 { config, pkgs, inputs, hyprglass, shiki-cli, retrosmart-cursors, gamemaker-fhs,  ... }:
-
+let
+  hyprglass-pkg = pkgs.hyprland.plugins.buildHyprlandPlugin {
+    pluginName = "hyprglass";
+    version = "unstable";
+    src = inputs.hyprglass;
+  };
+in
 {
+
+
   ############################################################
   # Core Home Manager Identity
   ############################################################
@@ -249,6 +257,27 @@ suupa = ''
     tmux attach-session -t suupa
   end
 '';
+
+ccc = ''
+  tmux kill-session -t ccc 2>/dev/null
+  tmux new-session -d -s ccc -c $HOME
+
+  set -l top (tmux display-message -p -t ccc '#{pane_id}')
+  set -l bottom (tmux split-window -v -t ccc -p 40 -c $HOME -P -F '#{pane_id}')
+  sleep 0.3
+
+  tmux send-keys -t $top 'nvim ~/Documents/devsup/' Enter
+  tmux select-pane -t $top -T nvim
+
+  tmux send-keys -t $bottom 'shiki' Enter
+  tmux select-pane -t $bottom -T shiki
+
+  if set -q TMUX
+    tmux switch-client -t ccc
+  else
+    tmux attach-session -t ccc
+  end
+'';
 };
 
   ############################################################
@@ -310,7 +339,8 @@ suupa = ''
   # Hyprland
   ############################################################
   wayland.windowManager.hyprland.plugins = [
-    hyprglass
+    #hyprglass
+    pkgs.hyprlandPlugins.hyprglass
   ];
 
   wayland.windowManager.hyprland.settings = {
@@ -340,13 +370,35 @@ suupa = ''
   };
 
   # hyprpaper: preload/apply wallpaper on startup
-  home.file.".config/hypr/hyprpaper.conf" = {
-    text = ''
-      preload = /home/suupatruupa/Pictures/Wallpapers/wallhaven-1qr6mg.png
-      wallpaper = eDP-1,/home/suupatruupa/Pictures/Wallpapers/wallhaven-1qr6mg.png
-      splash = false
-    '';
-  };
+  #home.file.".config/hypr/hyprpaper.conf" = {
+  #  text = ''
+  #    preload = /home/suupatruupa/Pictures/Wallpapers/wallhaven-1qr6mg.png
+  #    wallpaper = eDP-1,/home/suupatruupa/Pictures/Wallpapers/wallhaven-1qr6mg.png
+  #    splash = false
+  #  '';
+  #};
+
+home.file.".config/hypr/hyprland.lua" = {
+  text = let
+    hyprglass-pkg = pkgs.hyprlandPlugins.mkHyprlandPlugin {
+      pluginName = "hyprglass";
+      version = "unstable";
+      src = inputs.hyprglass;
+      hyprland = pkgs.hyprland;
+      meta = { };
+      installPhase = ''
+        mkdir -p $out/lib
+        cp hyprglass.so $out/lib/libhyprglass.so
+      '';
+    };
+  in ''
+    -- Dynamic store path built directly from source
+    hl.plugin.load("${hyprglass-pkg}/lib/libhyprglass.so")
+
+    ${builtins.readFile ./.config/hypr/hyprland.lua}
+  '';
+};
+
 
   # Wallpaper picker script (wofi-based dynamic switcher)
   home.file.".config/hypr/scripts/wallpaper_picker.sh" = {

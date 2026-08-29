@@ -58,6 +58,22 @@
         "type": "github"
       }
     },
+    "hyprglass": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784579282,
+        "narHash": "sha256-x/584kY+XXlU/OWKtZAFo89VtowjLXs1DiP9PC0o0Os=",
+        "owner": "hyprnux",
+        "repo": "hyprglass",
+        "rev": "5bc835dcc909cef6980291688143048cf16942b5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hyprnux",
+        "repo": "hyprglass",
+        "type": "github"
+      }
+    },
     "nix-flatpak": {
       "locked": {
         "lastModified": 1783368811,
@@ -144,6 +160,7 @@
         "fetch-3d": "fetch-3d",
         "helium-flake": "helium-flake",
         "home-manager": "home-manager",
+        "hyprglass": "hyprglass",
         "nix-flatpak": "nix-flatpak",
         "nixpkgs": "nixpkgs_2",
         "quickshell": "quickshell",

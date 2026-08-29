@@ -12,6 +12,11 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+hyprglass = {
+    url = "github:hyprnux/hyprglass";
+    flake = false;
+  };
+
     shiki-src = {
       url = "github:sazardev/shiki";
       flake = false;
