@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

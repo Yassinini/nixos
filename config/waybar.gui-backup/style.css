@@ -1,0 +1,38 @@
+
+#waybar {background-color: rgba(0, 0, 0, 0.00); color: #ffffff;
+border-radius: 14px;
+color: #ffffff;
+}
+#workspaces {background-color: rgba(10, 25, 47, 0.85); border-radius: 14px;
+border-radius: 14px;
+}
+#workspaces button {background-color: rgba(10, 25, 47, 0.85); border-radius: 6px; color: #ffffff;
+border-radius: 6px;
+color: #ffffff;
+}
+#workspaces button.active {background-color: rgba(255, 179, 71, 0.95); border-radius: 6px; color: #1a1a1a;
+border-radius: 6px;
+}
+#clock,#battery,#cpu,#memory,#disk,#temperature,#backlight,#network,#pulseaudio,#wireplumber,#custom-media,#mode,#idle_inhibitor,#mpd,#bluetooth,#custom-spotify,#custom-weather,#custom-screenshot_t,#custom-power,#tray,#custom-storage {
+  background-color: rgba(10,25,47,0.78); border-radius: 14px; color: #ffffff;
+}
+
+#pulseaudio {background-color: rgba(17, 24, 39, 0.85);
+border-radius: 14px;
+color: #ffffff;
+}
+
+#custom-spotify {background-color: rgba(17, 24, 39, 0.85);
+border-radius: 14px;
+color: #ffffff;
+}
+
+#battery {background-color: rgba(17, 24, 39, 0.85);
+border-radius: 14px;
+color: #ffffff;
+}
+
+#network {background-color: rgba(17, 24, 39, 0.85);
+border-radius: 14px;
+color: #ffffff;
+}

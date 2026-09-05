@@ -1,0 +1,260 @@
+# shiki configuration — every key below has a default, so nothing here is
+# required. Full reference (every option, every keybinding, note format):
+# https://sazardev.github.io/shiki/documentation.html
+# Press `?` in the app any time for a live, searchable keybinding reference,
+# and leader+`s` (Settings) for a summary of everything in this file.
+#
+# General app behavior.
+# - default_notebook: used when a command doesn't specify -n <notebook>.
+# - editor: the external editor for `E` — defaults to $EDITOR, then "nvim".
+# - daily_template: which template (by filename, without .md) daily notes use.
+# - use_favorite_editor: when true, `i` opens the OS's detected favorite/
+#   default editor instead of the built-in one, same as `E` but auto-resolved.
+# - mouse_drag_selection: when true, a mouse click over a note's body in
+#   PREVIEW jumps straight into edit mode with the cursor on the clicked
+#   line (a mouse-only alternative to `i`/vim motions); click-and-drag
+#   instead selects text and copies it to the clipboard on release.
+# - data_dir: optional path override for the notebooks directory. Point this
+#   at an existing Obsidian vault or any markdown folder to use it as the
+#   notebooks root. Unset defaults to the platform data directory.
+# - show_hints: when true, text-input prompts that have one (e.g. new
+#   notebook) show a small hint line explaining non-obvious input.
+# - remember_last_session: when true, quitting saves exactly where you were
+#   (notebook, folder, selected note/folder, focused panel) and the next
+#   launch restores it instead of starting at the first notebook's root.
+# - show_coffee_link: shows the Buy Me a Coffee segment in the footer.
+#   Defaults to true.
+# - skip_delete_confirm: when true, deleting a note/folder skips the
+#   confirm dialog (still restorable via leader+`u`). Doesn't apply to
+#   notebook delete, which asks a real delete-vs-untrack question.
+# - show_dates: shows each note's date next to its title in the NOTES list.
+# - wikilink_autocomplete: typing `[[` opens the note-picker menu. Defaults
+#   to true.
+# - daily_agenda: a new daily note gets a "## Due today" section listing
+#   pending tasks across every notebook. Defaults to true.
+# - compact_footer: hides char/word count, reading time, and note-count
+#   detail from the footer, leaving just the essentials.
+# - status_message_timeout_secs: how long a footer status message stays
+#   visible before clearing itself. Defaults to 2.
+# - drawer_width: width in columns of the notebook drawer (leader+`b`).
+#   Defaults to 30.
+# - tasks_show_done_default: whether the tasks view starts showing every
+#   task, including done ones, instead of just pending.
+# - default_note_sort: "filename", "title", or "date" — which order the
+#   NOTES list sorts by on launch. Defaults to "filename".
+# - log_history_limit: max entries kept in the logs modal and log file.
+#   Defaults to 500.
+# - trash_retention_days: days a deleted note/folder stays in the trash
+#   before being auto-purged at startup. 0 (the default) means never.
+# - reading_wpm: words-per-minute for the footer's "N min read" estimate.
+#   Defaults to 200.
+# - page_step: how many rows PageUp/PageDown move at once. Defaults to 10.
+[general]
+default_notebook = "personal"
+editor = "nvim"
+daily_template = "daily"
+use_favorite_editor = false
+mouse_drag_selection = true
+show_hints = true
+remember_last_session = true
+show_coffee_link = true
+skip_delete_confirm = false
+show_dates = false
+wikilink_autocomplete = true
+daily_agenda = true
+compact_footer = false
+status_message_timeout_secs = 2
+drawer_width = 30
+tasks_show_done_default = false
+default_note_sort = "filename"
+log_history_limit = 500
+trash_retention_days = 0
+reading_wpm = 200
+page_step = 10
+
+# Keybindings are scoped, not one flat map — [keybindings.global] needs the
+# leader key first; [keybindings.notebooks]/[keybindings.notes]/
+# [keybindings.preview] only apply while that panel has focus, so the same
+# key can mean something different in each one. Press `?` in the app for a
+# live, searchable reference of every binding that's actually active —
+# it's generated from this exact config, so it can't drift from it.
+[keybindings]
+leader = "space"
+quit = "q"
+
+[keybindings.global]
+theme_picker = "c"
+global_search = "g"
+tags_panel = "T"
+logs = "l"
+toggle_favorite_editor = "e"
+check_update = "U"
+drawer = "b"
+undo_delete = "u"
+settings = "s"
+scratchpad = "p"
+links = "B"
+tasks_panel = "t"
+query_panel = "q"
+publish = "P"
+export = "x"
+zen_mode = "z"
+
+[keybindings.notebooks]
+new = "a"
+rename = "r"
+delete = "d"
+sync = "s"
+pull = "p"
+pull_all = "P"
+set_remote = "R"
+push = "u"
+
+[keybindings.notes]
+new = "a"
+rename = "r"
+delete = "d"
+edit_inline = "i"
+edit_external = "E"
+search = "/"
+daily_note = "t"
+move_to_notebook = "m"
+sort = "o"
+tree_view = "T"
+toggle_dates = "D"
+new_folder = "f"
+visual = "v"
+copy_entries = "y"
+
+[keybindings.preview]
+edit_inline = "i"
+edit_external = "E"
+history = "H"
+links = "L"
+outline = "o"
+
+# `name` picks a built-in theme (`shiki theme list` shows every name). Every
+# one of a theme's 19 color slots can be overridden individually under
+# [theme.overrides] — accent, bg, fg, selection, border, statusbar,
+# highlight, error, warning, success, inactive, scrollbar, tab_active,
+# tab_inactive, panel_title, cursor, link, tag, muted. Anything left unset
+# falls back to `name`'s own value for that slot. `shiki theme create
+# [--from <theme>]` scaffolds all 19 here at once from a real palette,
+# instead of hand-typing hex codes with no example to copy from.
+# - icons: when false, every Nerd Font glyph falls back to plain text —
+#   for a terminal font that isn't Nerd-Fonts-patched. Defaults to true.
+[theme]
+name = "gruvbox-dark"
+icons = true
+
+# Global git sync policy — auto_push/auto_sync/auto_sync_every can all be
+# overridden per notebook under [notebooks.<name>] below.
+# - auto_commit: commit pending changes automatically (still needs `s`/`u`,
+#   or auto_sync, to actually push them anywhere).
+# - remote_template: auto-configures a *new* (non-URL) notebook's remote,
+#   e.g. "git@git.example.com:notes/{notebook}.git" — "{notebook}" is
+#   replaced with the new notebook's name. Empty (the default) means don't
+#   auto-configure anything; the remote still has to already exist.
+[git]
+auto_commit = true
+auto_push = false
+commit_prefix = "shiki: "
+remote = "origin"
+branch = "main"
+sign_commits = false
+auto_sync = false
+auto_sync_every = 5
+remote_template = ""
+
+# Inline note editor UX (Mode::Edit) — every key here is off unless noted,
+# so nothing about how the editor behaves changes until you opt in, e.g.
+# from the EDITOR tab in Settings (leader+`s`).
+# - mouse_selection: click to position the cursor, drag to select,
+#   double-click for a word, triple-click for a line. Defaults to true.
+# - find_replace: Ctrl+F opens a find/replace bar. Defaults to true.
+# - os_clipboard: Ctrl+C/X/V use the real OS clipboard, falling back to the
+#   existing OSC 52 mechanism when there's no display server (e.g. SSH).
+# - select_all_ctrl_a: Ctrl+A selects everything instead of moving to the
+#   start of the line.
+# - line_numbers: shows a line-number gutter.
+# - multi_cursor: Alt+Click adds a cursor, Ctrl+D adds the next occurrence
+#   of the current word/selection.
+# - auto_list_continue: Enter on a list/checkbox line continues it on the
+#   next line; Enter on an empty item exits the list; Backspace removes an
+#   empty item's prefix in one step. Defaults to true.
+# - format_shortcuts: Ctrl+B / Ctrl+Alt+I wrap the selection in bold/italic.
+#   Defaults to true.
+# - auto_pair_brackets: typing ( ` " wraps the selection or inserts an
+#   empty pair. Defaults to true.
+# - paste_url_as_link: pasting a bare URL over a selection wraps it as a
+#   markdown link. Defaults to true.
+# - snippet_expand_tab: Tab expands a matching snippet trigger instead of
+#   inserting a literal tab. Defaults to true.
+# - typewriter_scroll: keeps the cursor's line vertically centered while
+#   typing. Defaults to false.
+# - move_line: Alt+Up/Alt+Down move the current line past its neighbor.
+#   Defaults to true.
+# - duplicate_line: Alt+D duplicates the current line. Defaults to true.
+# - block_indent_select: Tab/Shift+Tab with a selection indent/outdent every
+#   line it spans. Defaults to true.
+[editor]
+mouse_selection = true
+find_replace = true
+os_clipboard = false
+select_all_ctrl_a = false
+line_numbers = false
+multi_cursor = false
+auto_list_continue = true
+format_shortcuts = true
+auto_pair_brackets = true
+paste_url_as_link = true
+snippet_expand_tab = true
+typewriter_scroll = false
+move_line = true
+duplicate_line = true
+block_indent_select = true
+
+# PDF export (`shiki publish`, leader+`P`) — pdf_theme picks one of
+# go-pretty-pdf's 17 built-in themes: default, minimal, modern, classic,
+# corporate, dark, academic, editorial, sepia, terminal, blueprint, ivy,
+# government, resume, legal, latex, gruvbox. The `pretty-pdf` binary this
+# feature shells out to is fetched automatically on first use if it isn't
+# already on $PATH — see `shiki doctor`.
+# - export_dir: directory PDFs are saved into, e.g. "{data_dir}/exports".
+#   Empty (the default) means the app's own data dir.
+# - ask_export_path: when true, publishing always prompts for the exact
+#   save path instead of silently writing to export_dir. Defaults to false.
+[export]
+pdf_theme = "default"
+export_dir = ""
+ask_export_path = false
+
+# Optional per-notebook overrides of [git] above, e.g.:
+# [notebooks.work]
+# auto_sync = true
+# auto_sync_every = 3
+# auto_push = true
+#
+# Each notebook can have its own path (an existing directory on disk)
+# instead of living under the default data directory:
+# [notebooks.obsidian]
+# path = "/Users/me/Documents/Obsidian/Work"
+# auto_sync = true
+[notebooks]
+
+# Custom entries for the inline editor's `/`-menu, keyed by trigger, e.g.:
+# [snippets.callout]
+# label = "Info callout"
+# body = "> **Info:** {{cursor}}"
+# A trigger matching a built-in (h1/h2/h3/code/math/table/check/quote/
+# divider/date/tags/frontmatter/bullet/numbered/link/image/note/warning/
+# details) replaces it instead of adding a duplicate.
+[snippets]
+
+# Named, saved `shiki query` DSL strings, keyed by name, e.g.:
+# due-soon = "where due < today sort due asc"
+# Run one with `shiki query --saved <name>`; same Dataview-style language
+# as the leader+`q` modal and the literal CLI arg.
+[queries]
+[notebooks.HUB]
+path = "/home/suupatruupa/Documents/hub"

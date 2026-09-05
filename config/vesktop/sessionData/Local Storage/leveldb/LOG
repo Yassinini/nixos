@@ -1,0 +1,6 @@
+2026/08/16-22:06:44.174 aac Reusing MANIFEST /home/suupatruupa/.config/vesktop/sessionData/Local Storage/leveldb/MANIFEST-000001
+2026/08/16-22:06:44.225 aac Recovering log #4
+2026/08/16-22:06:44.227 aac Reusing old log /home/suupatruupa/.config/vesktop/sessionData/Local Storage/leveldb/000004.log 
+2026/08/16-22:07:44.233 aac Level-0 table #8: started
+2026/08/16-22:07:44.241 aac Level-0 table #8: 81946 bytes OK
+2026/08/16-22:07:44.243 aac Delete type=0 #4

@@ -1,0 +1,26 @@
+{
+    "layer": "top",
+    "position": "top",
+    "modules-left": [
+        "custom/launcher",
+        "hyprland/workspaces"
+    ],
+    "modules-center": [
+        "custom/ycal"
+    ],
+    "modules-right": [
+        "pulseaudio",
+        "network",
+        "battery"
+    ],
+    "custom/launcher": {
+        "format": "  ",
+        "on-click": "alacritty"
+    },
+    "custom/ycal": {
+        "exec": "python3 ~/.config/waybar-ycal/bar.py",
+        "return-type": "json",
+        "interval": 300,
+        "on-click": "~/.config/waybar-ycal/toggle.sh"
+    }
+}

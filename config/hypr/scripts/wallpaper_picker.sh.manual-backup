@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+DIR="$HOME/Pictures/Wallpapers"
+
+ROFI_INPUT=""
+for img in "$DIR"/*; do
+    if [ -f "$img" ]; then
+        filename=$(basename "$img")
+        ROFI_INPUT+="${filename}\x00icon\x1f${img}\n"
+    fi
+done
+
+SELECTION=$(echo -e "$ROFI_INPUT" | rofi -dmenu -show-icons -theme-str '@import "~/.cache/wallpaper-rofi.rasi"' -p "Select Wallpaper")
+
+if [ -n "$SELECTION" ]; then
+    IMAGE="$DIR/$SELECTION"
+    if [ -f "$IMAGE" ]; then
+        mkdir -p ~/.cache
+        ln -sf "$IMAGE" ~/.cache/current_wallpaper
+
+        # Fast 144Hz Circular Expansion
+        awww img "$IMAGE" \
+            --transition-type outer \
+            --transition-step 144 \
+            --transition-fps 165 &
+
+        # Matugen updates in background
+        (matugen image "$IMAGE" && notify-send "Palette Updated" "Applied: $SELECTION") &
+    fi
+fi

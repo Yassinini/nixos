@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_CoverflowPicker_FILE /home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CoverflowPicker)
+set(__QT_DEPLOY_TARGET_CoverflowPicker_TYPE EXECUTABLE)

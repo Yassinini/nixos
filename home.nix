@@ -90,7 +90,7 @@ gamemaker-fhs
 unzip
 appimage-run
 linuxdeploy
-
+concord-tui
 ];
 programs.btop = {
   enable = true;

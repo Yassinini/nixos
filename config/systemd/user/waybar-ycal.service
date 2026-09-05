@@ -1,0 +1,13 @@
+[Unit]
+Description=Waybar Google Calendar popup daemon
+After=graphical-session.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/suupatruupa/.config/waybar-ycal
+ExecStart=/run/current-system/sw/bin/nix-shell /home/suupatruupa/.config/waybar-ycal/shell.nix --run "python3 popup.py"
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=graphical-session.target

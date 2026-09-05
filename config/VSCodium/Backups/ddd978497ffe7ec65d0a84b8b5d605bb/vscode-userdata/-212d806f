@@ -1,0 +1,20 @@
+vscode-userdata:/home/suupatruupa/.config/VSCodium/User/settings.json {"mtime":1787969954473,"ctime":1787969954473,"size":611,"etag":"3gipies34jm","orphaned":false,"typeId":""}
+{
+    "workbench.activityBar.location": "top",
+    "jupyter.askForKernelRestart": false,
+    "workbench.colorTheme": "Black",
+    "explorer.confirmDelete": false,
+    "breadcrumbs.enabled": false,
+    "workbench.browser.showInTitleBar": false,
+    "workbench.navigationControl.enabled": false,
+    "window.commandCenter": false,
+    "explorer.confirmDragAndDrop": false,
+    "workbench.editor.enablePreview": false,
+    "window.restoreWindows": "none",
+    "files.hotExit": "off",
+    "python.defaultInterpreterPath": "/home/suupatruupa/Documents/hmph/.venv",
+    "window.confirmSaveUntitledWorkspace": false,
+    "workbench.settings.applyToAllProfiles": [
+        
+    ]
+}

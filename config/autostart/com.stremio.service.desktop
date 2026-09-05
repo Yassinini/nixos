@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Stremio Service
+Comment=Freedom To Stream
+Exec=stremio-service
+MimeType=x-scheme-handler/stremio;
+Terminal=false
+Type=Application
+Categories=Utility;AudioVideo;Video;Player;
+Keywords=Stremio;Media;Play;
+StartupNotify=true
+Icon=com.stremio.service
+X-Desktop-File-Install-Version=0.28
+TryExec=stremio-service

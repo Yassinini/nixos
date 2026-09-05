@@ -1,0 +1,91 @@
+* {
+    /* Base Backgrounds (Catppuccin Mocha Crust / Mantle) */
+    background:                  #11111BFF;
+    background-alt:              #1E1E2EFF;
+    
+    /* Global Text Rules */
+    foreground:                  #CDD6F4FF;
+    text-color:                  #CDD6F4FF;
+    
+    /* Dynamic Wallust Accents - color5/6 pull brighter tones */
+    accent:                      {{color5}}FF;
+    border-color:                {{color5}}FF;
+    
+    /* High contrast selection fill */
+    selected-normal-background:  {{color5}}FF;
+    selected-normal-foreground:  #11111BFF;
+    
+    normal-background:           transparent;
+    normal-foreground:           #CDD6F4FF;
+}
+
+window {
+    background-color: @background;
+    border: 2px;
+    border-color: @accent;
+    border-radius: 12px;
+    width: 650px;
+}
+
+mainbox {
+    background-color: transparent;
+    padding: 20px;
+    /* Forces removal of mode-switcher bar */
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    background-color: @background-alt;
+    text-color: @foreground;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 0px 0px 15px 0px;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    background-color: @accent;
+    text-color: #11111BFF;
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin: 0px 10px 0px 0px;
+}
+
+entry {
+    background-color: transparent;
+    text-color: @foreground;
+    placeholder: "Search...";
+    placeholder-color: #6C7086FF;
+    vertical-align: 0.5;
+}
+
+listview {
+    background-color: transparent;
+    spacing: 6px;
+    lines: 7;
+    scrollbar: false;
+}
+
+element {
+    padding: 10px 14px;
+    border-radius: 8px;
+    background-color: transparent;
+    text-color: @foreground;
+}
+
+/* Force element children to inherit state styles */
+element-text, element-icon {
+    background-color: inherit;
+    text-color:       inherit;
+    vertical-align:   0.5;
+}
+
+element-icon {
+    size: 24px;
+}
+
+/* Selected row applies cleanly across row, text, and icon */
+element selected {
+    background-color: @selected-normal-background;
+    text-color:       @selected-normal-foreground;
+}

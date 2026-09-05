@@ -1,0 +1,5 @@
+2026/08/16-21:59:38.852 10558 Creating DB /home/suupatruupa/.config/vesktop/sessionData/Local Storage/leveldb since it was missing.
+2026/08/16-21:59:38.870 10558 Reusing MANIFEST /home/suupatruupa/.config/vesktop/sessionData/Local Storage/leveldb/MANIFEST-000001
+2026/08/16-22:01:56.256 10558 Level-0 table #5: started
+2026/08/16-22:01:56.263 10558 Level-0 table #5: 66050 bytes OK
+2026/08/16-22:01:56.270 10558 Delete type=0 #3

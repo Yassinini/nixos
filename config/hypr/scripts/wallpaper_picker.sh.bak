@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+DIR="/home/suupatruupa/Pictures/Wallpapers"
+WOFI="/run/current-system/sw/bin/wofi"
+NOTIFY="/run/current-system/sw/bin/notify-send"
+
+SELECTION=$(ls "$DIR" | $WOFI --show dmenu -p "Select Wallpaper" \
+    --style ~/.config/wofi/style.css \
+    --width 800 \
+    --height 200 \
+    --columns 6)
+
+if [ -n "$SELECTION" ]; then
+    IMAGE="$DIR/$SELECTION"
+    if [ -f "$IMAGE" ]; then
+        hyprctl hyprpaper unload all
+        hyprctl hyprpaper preload "$IMAGE"
+        hyprctl hyprpaper wallpaper "eDP-1,$IMAGE"
+        $NOTIFY "Wallpaper" "Applied: $SELECTION"
+    fi
+fi

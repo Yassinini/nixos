@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+2e5055975c52e13b027f65c8114f0a3a CMakeFiles/CoverflowPicker_autogen
+47198f28cca2d4f7376daa3563e51276 CoverflowPicker_autogen/timestamp

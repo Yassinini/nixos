@@ -1,0 +1,7 @@
+{
+  "latestVersion": "v1.6.7",
+  "releaseUrl": "https://github.com/muhammedaksam/waha-tui/releases/tag/v1.6.7",
+  "releaseNotes": "## What's Changed\r\n* fix: prevent crash when entering chat and handling destroyed renderables (#98) by @muhammedaksam in https://github.com/muhammedaksam/waha-tui/pull/99\r\n* Release v1.6.7 by @muhammedaksam in https://github.com/muhammedaksam/waha-tui/pull/100\r\n\r\n\r\n**Full Changelog**: https://github.com/muhammedaksam/waha-tui/compare/v1.6.6...v1.6.7",
+  "publishedAt": "2026-08-04T21:06:43Z",
+  "checkedAt": "2026-08-06T21:52:02.920Z"
+}

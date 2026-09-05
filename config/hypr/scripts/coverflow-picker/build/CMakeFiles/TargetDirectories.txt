@@ -1,0 +1,9 @@
+/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CMakeFiles/CoverflowPicker.dir
+/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CMakeFiles/edit_cache.dir
+/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CMakeFiles/rebuild_cache.dir
+/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CMakeFiles/list_install_components.dir
+/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CMakeFiles/install.dir
+/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CMakeFiles/install/local.dir
+/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CMakeFiles/install/strip.dir
+/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CMakeFiles/CoverflowPicker_autogen_timestamp_deps.dir
+/home/suupatruupa/.config/hypr/scripts/coverflow-picker/build/CMakeFiles/CoverflowPicker_autogen.dir

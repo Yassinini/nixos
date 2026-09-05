@@ -1,0 +1,54 @@
+Data Visual/data/*
+!Data Visual/data/.gitkeep
+*.csv
+*.zip
+*.xlsx
+*.json
+*.yml
+*.yaml
+
+# Large binary files and media
+computer_vision/samples/Weights/
+computer_vision/samples/Videos/
+computer_vision/samples/Images/
+computer_vision/samples/Slides/
+computer_vision/Course_Materials/Weights/
+*.dat
+*.caffemodel
+*.hdf5
+computer_vision/Face Recognition/lwkmyownprojectlikedontevenbotherimjsthatgoodlol/
+download_data.py
+heh.py
+*.weights
+*.mp4
+*.avi
+*.mov
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.pdf
+
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# IDE and cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.npy
+*.pkl
+*.joblib
+*.model
+.pytest_cache/
+.ipynb_checkpoints/
+.idea/
+.vscode/

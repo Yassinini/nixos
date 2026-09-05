@@ -1,0 +1,7 @@
+notebook = "HUB"
+notes_path = ["4_LearnCoding"]
+focus = "preview"
+
+[selected]
+kind = "note"
+stem = "NOTES_CPP"

@@ -1,0 +1,12 @@
+{
+    "workbench.activityBar.location": "top",
+    "jupyter.askForKernelRestart": false,
+    "workbench.colorTheme": "Black",
+    "explorer.confirmDelete": false,
+    "breadcrumbs.enabled": false,
+    "workbench.browser.showInTitleBar": false,
+    "workbench.navigationControl.enabled": false,
+    "window.commandCenter": false,
+    "explorer.confirmDragAndDrop": false,
+    "workbench.editor.enablePreview": false
+}

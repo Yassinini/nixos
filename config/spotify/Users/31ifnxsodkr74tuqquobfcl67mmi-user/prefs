@@ -1,0 +1,9 @@
+audio.allow_downgrade=false
+audio.sync_bitrate_enumeration=4
+audio.play_bitrate_non_metered_migrated=true
+connect.dial_devices="[]"
+connect.mdns_devices="[]"
+audio.play_bitrate_non_metered_enumeration=4
+audio.play_bitrate_enumeration=4
+app.player.volume=46601
+audio.loudness.environment=2

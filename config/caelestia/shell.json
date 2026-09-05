@@ -1,0 +1,73 @@
+{
+    "appearance": {
+        "transparency": {
+            "enabled": true
+        }
+    },
+    "background": {
+        "wallpaperEnabled": true
+    },
+    "bar": {
+        "activeWindow": {
+            "compact": true,
+            "inverted": true,
+            "showOnHover": false
+        },
+        "clock": {
+            "background": false,
+            "showDate": true,
+            "showIcon": false
+        },
+        "dragThreshold": 40,
+        "persistent": true,
+        "popouts": {
+            "activeWindow": true,
+            "statusIcons": true,
+            "tray": true
+        },
+        "scrollActions": {
+            "workspaces": true
+        },
+        "showOnHover": true,
+        "status": {
+            "showAudio": false,
+            "showKbLayout": false,
+            "showLockStatus": true
+        },
+        "tray": {
+            "background": false,
+            "compact": false,
+            "recolour": false
+        },
+        "workspaces": {
+            "activeTrail": false,
+            "occupiedBg": true,
+            "shown": 4
+        }
+    },
+    "dashboard": {
+        "performance": {
+            "showGpu": true
+        }
+    },
+    "general": {
+        "apps": {
+            "terminal": [
+                "alacritty"
+            ]
+        }
+    },
+    "launcher": {
+        "enableDangerousActions": false,
+        "maxShown": 6,
+        "showOnHover": true
+    },
+    "services": {
+        "gpuType": "NVIDIA",
+        "useFahrenheit": false,
+        "useTwelveHourClock": false
+    },
+    "sidebar": {
+        "enabled": true
+    }
+}

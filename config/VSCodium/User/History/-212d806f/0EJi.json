@@ -1,0 +1,6 @@
+{
+    "workbench.activityBar.location": "top",
+    "jupyter.askForKernelRestart": false,
+    "workbench.colorTheme": "Black",
+    "explorer.confirmDelete": false
+}

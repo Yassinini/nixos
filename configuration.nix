@@ -20,19 +20,44 @@ in
 
   documentation.man.man-db.enable = false;
 
-  nixpkgs.overlays = [
-    (final: prev: {
-      python3 = prev.python3.override {
-        packageOverrides = pyFinal: pyPrev: {
-          flatlatex = pyPrev.flatlatex.overridePythonAttrs (old: {
-            disabled = false;
-            doCheck = false;
-          });
-        };
+nixpkgs.overlays = [
+  (final: prev: {
+    python3 = prev.python3.override {
+      packageOverrides = pyFinal: pyPrev: {
+        flatlatex = pyPrev.flatlatex.overridePythonAttrs (old: {
+          disabled = false;
+          doCheck = false;
+        });
       };
-      python3Packages = final.python3.pkgs;
-    })
-  ];
+    };
+    python3Packages = final.python3.pkgs;
+
+    spyderPython = prev.python3.override {
+      packageOverrides = pyFinal: pyPrev: {
+        jedi = pyPrev.jedi.overridePythonAttrs (old: {
+          version = "0.19.2";
+          src = pyFinal.fetchPypi {
+            pname = "jedi";
+            version = "0.19.2";
+            hash = "sha256-R3DcPeQb3jlmsC64T7z1V/szzOJq0j2hLHQvtQ7LEfA=";
+          };
+          doCheck = false;
+        });
+        python-lsp-ruff = pyPrev.python-lsp-ruff.overridePythonAttrs (old: {
+          doCheck = false;
+        });
+        jupyter-server = pyPrev.jupyter-server.overridePythonAttrs (old: {
+          doCheck = false;
+        });
+      };
+    };
+
+    # Expose spyder built against the isolated python set
+    spyder-isolated = final.spyderPython.pkgs.spyder;
+  })
+];
+
+
 
 nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = true;
@@ -398,6 +423,8 @@ xdg.portal = {
     qt6.qtbase
     qt6.wrapQtAppsHook
 
+spyder-isolated
+uv
 #myappshere
   ];
 

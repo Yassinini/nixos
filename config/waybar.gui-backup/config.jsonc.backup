@@ -1,0 +1,11 @@
+{
+    "layer": "top",
+    "position": "top",
+    "modules-left": ["custom/launcher", "hyprland/workspaces"],
+    "modules-center": ["clock"],
+    "modules-right": ["pulseaudio", "network", "battery"],
+    "custom/launcher": {
+        "format": "  ",
+        "on-click": "alacritty"
+    }
+}

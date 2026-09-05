@@ -1,0 +1,24 @@
+set fish_greeting
+if status is-interactive; and not set -q TMUX
+    fish -c '
+        ~/.local/bin/caelestia-to-alacritty.py
+        while true
+            inotifywait -e modify -e create -e moved_to -q ~/.local/state/caelestia/ | grep -q scheme.json
+            and ~/.local/bin/caelestia-to-alacritty.py
+            and touch ~/.config/alacritty/alacritty.toml
+        end
+    ' &
+    disown
+end
+
+if status is-interactive; and not set -q TMUX
+    exec tmux new-session
+end
+if status is-interactive
+    set -gx STARSHIP_CONFIG "$HOME/.config/starship.toml"
+    if test -f "$HOME/.cache/wal/sequences"
+        cat "$HOME/.cache/wal/sequences" &
+    end
+    starship init fish | source
+    fastfetch
+end

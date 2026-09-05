@@ -1,0 +1,38 @@
+# Virtual environments
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Large ML artifacts
+ML-CV/**/Weights/
+ML-CV/**/Datasets/
+ML-CV/**/Slides/
+ML-CV/1_Computer_Vision/**/Weights/
+ML-CV/1_Computer_Vision/**/Datasets/
+ML-CV/2_Machine_Learning/**/Weights/
+ML-CV/2_Machine_Learning/**/Datasets/
+ML-CV/3_Projects/**/Weights/
+ML-CV/3_Projects/**/Datasets/
+*.caffemodel
+*.dat
+*.pt
+*.pth
+*.onnx
+*.h5
+*.pkl
+*.yml
+*.zip
+*.tar.gz
+
+# Media (large videos in Examples/Videos folders)
+*.mp4
+*.avi
+*.mov
+*.MOV
+
+# IDE
+.vscode/
+.idea/
+.ipynb_checkpoints/

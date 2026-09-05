@@ -1,0 +1,87 @@
+# Background - Pure Black
+background {
+    monitor =
+    color = rgb(0, 0, 0)
+}
+
+# TUI Window Container Box
+shape {
+    monitor =
+    size = 460, 220
+    color = rgb(15, 15, 15)
+    border_size = 2
+    border_color = rgb(255, 255, 255) # Sharp white border
+    rounding = 0
+    position = 0, 0
+    halign = center
+    valign = center
+}
+
+# TUI Header: Hostname & Title
+label {
+    monitor =
+    text = nixos login:
+    color = rgb(255, 255, 255)
+    font_size = 13
+    font_family = JetBrains Mono
+    position = -160, 75
+    halign = center
+    valign = center
+}
+
+# Live TUI Clock
+label {
+    monitor =
+    text = cmd[update:1000] echo "$(date +'%Y-%m-%d %H:%M:%S')"
+    color = rgb(160, 160, 160)
+    font_size = 12
+    font_family = JetBrains Mono
+    position = 110, 75
+    halign = center
+    valign = center
+}
+
+# User Name Line
+label {
+    monitor =
+    text = user: suupatruupa
+    color = rgb(240, 240, 240)
+    font_size = 13
+    font_family = JetBrains Mono
+    position = -130, 20
+    halign = center
+    valign = center
+}
+
+# Password Line Label
+label {
+    monitor =
+    text = password:
+    color = rgb(240, 240, 240)
+    font_size = 13
+    font_family = JetBrains Mono
+    position = -146, -30
+    halign = center
+    valign = center
+}
+
+# Terminal Password Input Box
+input-field {
+    monitor =
+    size = 220, 32
+    outline_thickness = 1
+    dots_size = 0.28
+    dots_spacing = 0.3
+    dots_center = false
+    outer_color = rgb(255, 255, 255)
+    inner_color = rgb(0, 0, 0)
+    font_color = rgb(255, 255, 255)
+    fade_on_empty = false
+    placeholder_text = <span foreground="##888888">...</span>
+    hide_input = false
+    rounding = 0
+    
+    position = 55, -30
+    halign = center
+    valign = center
+}
