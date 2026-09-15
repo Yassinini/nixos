@@ -32,31 +32,33 @@ nixpkgs.overlays = [
     };
     python3Packages = final.python3.pkgs;
 
-    spyderPython = prev.python3.override {
-      packageOverrides = pyFinal: pyPrev: {
-        jedi = pyPrev.jedi.overridePythonAttrs (old: {
-          version = "0.19.2";
-          src = pyFinal.fetchPypi {
-            pname = "jedi";
-            version = "0.19.2";
-            hash = "sha256-R3DcPeQb3jlmsC64T7z1V/szzOJq0j2hLHQvtQ7LEfA=";
+    spyderPython =
+      let
+        basePython = prev.python3.override {
+          packageOverrides = pyFinal: pyPrev: {
+            jedi = pyPrev.jedi.overridePythonAttrs (old: {
+              version = "0.19.2";
+              src = pyFinal.fetchPypi {
+                pname = "jedi";
+                version = "0.19.2";
+                hash = "sha256-R3DcPeQb3jlmsC64T7z1V/szzOJq0j2hLHQvtQ7LEfA=";
+              };
+            });
           };
-          doCheck = false;
-        });
-        python-lsp-ruff = pyPrev.python-lsp-ruff.overridePythonAttrs (old: {
-          doCheck = false;
-        });
-        jupyter-server = pyPrev.jupyter-server.overridePythonAttrs (old: {
-          doCheck = false;
-        });
-      };
-    };
+        };
+      in
+      basePython.pkgs.overrideScope (self: super:
+        builtins.mapAttrs (name: drv:
+          if builtins.isAttrs drv && drv ? overridePythonAttrs
+	          then drv.overridePythonAttrs (old: { doCheck = false; pythonImportsCheck = [ ]; })
+          else drv
+        ) super
+      );
 
-    # Expose spyder built against the isolated python set
-    spyder-isolated = final.spyderPython.pkgs.spyder;
+    # spyderPython is now a package SET, so reference spyder directly (no .pkgs)
+    spyder-isolated = final.spyderPython.spyder;
   })
 ];
-
 
 
 nixpkgs.config.allowUnfree = true;
@@ -104,7 +106,7 @@ nixpkgs.config.allowUnfree = true;
                   owner = "Konsl";
                   repo = "spicetify-visualizer";
                   rev = "dist";
-                  hash = "sha256-9mdORE+9MKLGyQYQ2P3So8n3IiRilzA1t11Mav/0JJI=";
+                  hash = "sha256-d48tFEcsBoMTjv+TPsfwwVjyXhTlcQK9uunaZjPkVWk=";
                 };
               }
             ];

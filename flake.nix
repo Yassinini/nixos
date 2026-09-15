@@ -113,7 +113,7 @@ hyprglass = {
           owner = "mdomlop";
           repo = "retrosmart-x11-cursors";
           rev = "master";
-          sha256 = "sha256-smsC02aDdOWlNfk+1/lVwH41qDCpPDxePDbrmou8M/4=";
+          sha256 = "sha256-X7F8DQt3BesAdL9nBjxEUY5O5LHAs9B2uKPzJsIfAUQ=";
         };
         nativeBuildInputs = with pkgs; [ imagemagick xcursorgen ];
         installFlags = [ "DESTDIR=${placeholder "out"}" "PREFIX=" ];

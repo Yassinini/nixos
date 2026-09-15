@@ -1,4 +1,4 @@
-#include <QGraphicsSceneMouseEvent>
+#include <qgraphicssceneevent.h>
 #include <QApplication>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -8,6 +8,8 @@
 #include <QVariantAnimation>
 #include <QEasingCurve>
 #include <QScreen>
+#include <QCursor>
+#include <QGuiApplication>
 #include <QDir>
 #include <QFileInfo>
 #include <QShortcut>
@@ -87,9 +89,15 @@ public:
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-        QScreen* screen = QApplication::primaryScreen();
+        // Open the picker on the monitor currently containing the mouse cursor
+        QScreen* screen = QGuiApplication::screenAt(QCursor::pos());
+        if (!screen) {
+            screen = QApplication::primaryScreen();
+        }
         QRect screenGeo = screen->geometry();
+
         resize(screenGeo.width(), 480);
+        move(screenGeo.x(), screenGeo.y());
         scene->setSceneRect(0, 0, screenGeo.width(), 480);
 
         labelItem = new QGraphicsTextItem();
@@ -208,57 +216,55 @@ public slots:
         if (currentIndex < static_cast<int>(items.size()) - 1) animateToIndex(currentIndex + 1);
     }
 
-    void applyWallpaper() {
-        if (items.empty()) return;
+void applyWallpaper() {
+    if (items.empty()) return;
 
-        QString selected = items[currentIndex]->path;
-        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QString selected = items[currentIndex]->path;
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
-        QString home = QDir::homePath();
-        QString user = env.value("USER", "suupatruupa");
-        QString nixPaths = QString("%1/.nix-profile/bin:/run/current-system/sw/bin:/etc/profiles/per-user/%2/bin").arg(home, user);
-        env.insert("PATH", nixPaths + ":" + env.value("PATH"));
+    QString home = QDir::homePath();
+    QString user = env.value("USER", "suupatruupa");
+    QString nixPaths = QString("%1/.nix-profile/bin:/run/current-system/sw/bin:/etc/profiles/per-user/%2/bin").arg(home, user);
+    env.insert("PATH", nixPaths + ":" + env.value("PATH"));
 
-        QProcess::execute("pkill", {"-9", "mpvpaper"});
+    QProcess::execute("pkill", {"-9", "mpvpaper"});
 
-        QProcess awww;
-        awww.setProcessEnvironment(env);
-        awww.start("awww", {
-            "img", "-o", "eDP-1",
-            "--transition-type", "outer",
-            "--transition-step", "90",
-            "--transition-fps", "60",
-            selected
-        });
-        awww.waitForFinished();
-
-        QString configPath = home + "/.config/matugen/config.toml";
-
-        QProcess matugen;
-        matugen.setProcessEnvironment(env);
-        matugen.setStandardInputFile(QProcess::nullDevice());
-        matugen.start("matugen", {
-            "-c", configPath,
-            "image", selected,
-            "-m", "dark",
-            "-t", "scheme-tonal-spot",
-            "--prefer=darkness"
-        });
-        matugen.waitForFinished();
-
-        QByteArray stdoutBuf = matugen.readAllStandardOutput();
-        QByteArray stderrBuf = matugen.readAllStandardError();
-
-        QFile logFile("/tmp/matugen.log");
-        if (logFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            QTextStream out(&logFile);
-            out << "STDOUT:\n" << stdoutBuf << "\n";
-            out << "STDERR:\n" << stderrBuf << "\n";
-            logFile.close();
-        }
-
-        qApp->quit();
+    // Build awww arguments targeting all active displays with your custom outer bezier transition
+    QStringList awwwArgs;
+    awwwArgs << "img";
+    for (QScreen* screen : QGuiApplication::screens()) {
+        awwwArgs << "-o" << screen->name();
     }
+
+    awwwArgs << "--transition-type" << "outer"
+             << "--transition-pos" << "0.5,0.5"
+             << "--transition-duration" << "1.2"
+             << "--transition-fps" << "144"
+             << "--transition-bezier" << ".43,1.19,.25,.96"
+             << selected;
+
+    QProcess awww;
+    awww.setProcessEnvironment(env);
+    awww.start("awww", awwwArgs);
+    awww.waitForFinished();
+
+    // Regenerate Material colors scheme via Matugen
+    QString configPath = home + "/.config/matugen/config.toml";
+    QProcess matugen;
+    matugen.setProcessEnvironment(env);
+    matugen.setStandardInputFile(QProcess::nullDevice());
+    matugen.start("matugen", {
+        "-c", configPath,
+        "image", selected,
+        "-m", "dark",
+        "-t", "scheme-tonal-spot",
+        "--prefer=darkness"
+    });
+    matugen.waitForFinished();
+
+    qApp->quit();
+}
+
 
 protected:
     void wheelEvent(QWheelEvent* event) override {
