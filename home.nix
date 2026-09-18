@@ -5,11 +5,84 @@ let
     version = "unstable";
     src = inputs.hyprglass;
   };
+
+retrosmart-cursors-pkg = pkgs.stdenv.mkDerivation {
+    pname = "retrosmart-x11-cursors";
+    version = "4.0a";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "mdomlop";
+      repo = "retrosmart-x11-cursors";
+      rev = "master";
+      hash = "sha256-X7F8DQt3BesAdL9nBjxEUY5O5LHAs9B2uKPzJsIfAUQ=";
+    };
+
+    nativeBuildInputs = [
+      pkgs.xcursorgen
+      pkgs.imagemagick
+      pkgs.gnumake
+      pkgs.inkscape
+      pkgs.bc
+      pkgs.which
+      pkgs.findutils
+    ];
+
+    buildPhase = ''
+      runHook preBuild
+      export HOME=$(mktemp -d)
+      export XDG_RUNTIME_DIR=$(mktemp -d)
+
+      # Build vector cursor targets specifically, ignoring packaging/tar errors
+      make vector || make -k || true
+      runHook postBuild
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/share/icons/retrosmart-black
+
+      # Safely locate the generated cursor directory without triggering SIGPIPE (exit code 141)
+      TARGET_DIR=""
+      for d in $(find . -maxdepth 2 -type d -iname "*black*" 2>/dev/null); do
+        if [ -d "$d/cursors" ]; then
+          TARGET_DIR="$d"
+          break
+        fi
+      done
+
+      if [ -z "$TARGET_DIR" ]; then
+        for d in $(find . -maxdepth 2 -type d -name "cursors" 2>/dev/null); do
+          TARGET_DIR=$(dirname "$d")
+          break
+        done
+      fi
+
+      if [ -n "$TARGET_DIR" ] && [ -d "$TARGET_DIR/cursors" ]; then
+        echo "Installing cursor theme from: $TARGET_DIR"
+        cp -r "$TARGET_DIR/cursors" $out/share/icons/retrosmart-black/
+        if [ -f "$TARGET_DIR/index.theme" ]; then
+          cp -f "$TARGET_DIR/index.theme" $out/share/icons/retrosmart-black/
+        fi
+      else
+        echo "ERROR: Could not locate compiled 'cursors' directory."
+        exit 1
+      fi
+
+      if [ ! -f "$out/share/icons/retrosmart-black/index.theme" ]; then
+        cat <<EOF > $out/share/icons/retrosmart-black/index.theme
+[Icon Theme]
+Name=retrosmart-black
+Comment=RetroSmart Black Cursor Theme
+EOF
+      fi
+
+      runHook postInstall
+    '';
+  };
+
   dotfilesDir = "${config.home.homeDirectory}/.nixos";
 in
 {
-
-
   ############################################################
   # Core Home Manager Identity
   ############################################################
@@ -23,18 +96,17 @@ in
   ############################################################
   # Cursor Theme
   ############################################################
-  # Temporarily disabled — retrosmart-cursors fails to build (upstream Makefile bug)
-  home.pointerCursor = {
-     enable = true;
-     gtk.enable = true;
-     x11.enable = true;
-     package = retrosmart-cursors;
-     name = "retrosmart-xcursor-black";
-     size = 34;
-   };
+home.pointerCursor = {
+    enable = true;
+    name = "retrosmart-black";
+    package = retrosmart-cursors-pkg;
+    size = 20;
+    gtk.enable = true;
+    x11.enable = true;
+  };
 
   ############################################################
-  # GTK / QT / Dark Mode Theming
+  # GTK / QT / Dark Mode Theming & Session Variables
   ############################################################
   gtk = {
     enable = true;
@@ -58,7 +130,12 @@ in
     };
   };
 
+  # Merged Session Variables
   home.sessionVariables = {
+    XCURSOR_THEME = "retrosmart-black";
+    XCURSOR_SIZE = "20";
+    HYPRCURSOR_THEME = "retrosmart-black";
+    HYPRCURSOR_SIZE = "24";
     GTK_THEME = "Adwaita:dark";
     QT_STYLE_OVERRIDE = "adwaita-dark";
     GI_TYPELIB_PATH = "${pkgs.gtk4}/lib/girepository-1.0:${pkgs.gtk4-layer-shell}/lib/girepository-1.0:${pkgs.libadwaita}/lib/girepository-1.0";
@@ -68,6 +145,7 @@ in
   # Packages
   ############################################################
   home.packages = with pkgs; [
+    retrosmart-cursors-pkg
     rofi
     gtk4
     gtk4-layer-shell
@@ -84,18 +162,17 @@ in
     networkmanagerapplet
     nwg-look
     gum
-  pkgs.nvtopPackages.nvidia  
+    pkgs.nvtopPackages.nvidia  
+    gamemaker-fhs
+    unzip
+    appimage-run
+    linuxdeploy
+    concord-tui
+  ];
 
-
-gamemaker-fhs
-unzip
-appimage-run
-linuxdeploy
-concord-tui
-];
-programs.btop = {
-  enable = true;
-};
+  programs.btop = {
+    enable = true;
+  };
 
   ############################################################
   # Shell Integrations
@@ -165,10 +242,10 @@ programs.btop = {
     };
   };
 
-programs.fzf = {
-  enable = true;
-  enableFishIntegration = true;
-};
+  programs.fzf = {
+    enable = true;
+    enableFishIntegration = true;
+  };
 
   home.shellAliases = {
     steam = "WAYLAND_DISPLAY= SDL_VIDEODRIVER=x11 steam";
@@ -179,107 +256,107 @@ programs.fzf = {
     rebuild = "sudo nixos-rebuild switch --flake ~/.nixos#nixos";
     bk = "cd ~/.nixos";
     hyprset = "nix-shell -p python312 python312Packages.pygobject3 gtk4 libadwaita gobject-introspection cairo pkg-config uv lua5_4 glib --run 'export XDG_DATA_DIRS=\"$GSETTINGS_SCHEMAS_PATH:$XDG_DATA_DIRS\"; hyprmod'";
-};
+  };
 
-programs.fish.functions = {
-  gamemaker = ''
-    setsid gamemaker-fhs -c 'DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 exec ~/Apps/GameMaker/opt/GameMaker-LTS2026/GameMaker>
-    disown
-  '';
-layout = ''
-  tmux kill-session -t main 2>/dev/null
-  tmux new-session -d -s main -c $HOME
+  programs.fish.functions = {
+    gamemaker = ''
+      setsid gamemaker-fhs -c 'DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 exec ~/Apps/GameMaker/opt/GameMaker-LTS2026/GameMaker'
+      disown
+    '';
+    layout = ''
+      tmux kill-session -t main 2>/dev/null
+      tmux new-session -d -s main -c $HOME
 
-  set -l first (tmux display-message -p -t main '#{pane_id}')
-  set -l btoppane (tmux split-window -h -t main -p 55 -c $HOME -P -F '#{pane_id}')
-  sleep 0.3
-  tmux send-keys -t $btoppane 'btop' Enter
-  tmux select-pane -t $btoppane -T btop
+      set -l first (tmux display-message -p -t main '#{pane_id}')
+      set -l btoppane (tmux split-window -h -t main -p 55 -c $HOME -P -F '#{pane_id}')
+      sleep 0.3
+      tmux send-keys -t $btoppane 'btop' Enter
+      tmux select-pane -t $btoppane -T btop
 
-  set -l second (tmux split-window -v -t $first -p 50 -c $HOME -P -F '#{pane_id}')
-  sleep 0.3
+      set -l second (tmux split-window -v -t $first -p 50 -c $HOME -P -F '#{pane_id}')
+      sleep 0.3
 
-  set -l first_top (tmux display-message -p -t $first '#{pane_top}')
-  set -l second_top (tmux display-message -p -t $second '#{pane_top}')
+      set -l first_top (tmux display-message -p -t $first '#{pane_top}')
+      set -l second_top (tmux display-message -p -t $second '#{pane_top}')
 
-  set -l fetchpane
-  set -l termpane
-  if test $first_top -lt $second_top
-    set fetchpane $first
-    set termpane $second
-  else
-    set fetchpane $second
-    set termpane $first
-  end
+      set -l fetchpane
+      set -l termpane
+      if test $first_top -lt $second_top
+        set fetchpane $first
+        set termpane $second
+      else
+        set fetchpane $second
+        set termpane $first
+      end
 
-  tmux send-keys -t $fetchpane 'fetch' Enter
-  tmux select-pane -t $fetchpane -T fetch
-  tmux select-pane -t $termpane -T term
+      tmux send-keys -t $fetchpane 'fetch' Enter
+      tmux select-pane -t $fetchpane -T fetch
+      tmux select-pane -t $termpane -T term
 
-  if set -q TMUX
-    tmux switch-client -t main
-  else
-    tmux attach-session -t main
-  end
-'';
-suupa = ''
-  tmux kill-session -t suupa 2>/dev/null
-  tmux new-session -d -s suupa -c $HOME
+      if set -q TMUX
+        tmux switch-client -t main
+      else
+        tmux attach-session -t main
+      end
+    '';
+    suupa = ''
+      tmux kill-session -t suupa 2>/dev/null
+      tmux new-session -d -s suupa -c $HOME
 
-  set -l left (tmux display-message -p -t suupa '#{pane_id}')
-  set -l right (tmux split-window -h -t suupa -p 45 -c $HOME -P -F '#{pane_id}')
-  sleep 0.3
-  tmux select-pane -t $right -T term
+      set -l left (tmux display-message -p -t suupa '#{pane_id}')
+      set -l right (tmux split-window -h -t suupa -p 45 -c $HOME -P -F '#{pane_id}')
+      sleep 0.3
+      tmux select-pane -t $right -T term
 
-  set -l second (tmux split-window -v -t $left -p 50 -c $HOME -P -F '#{pane_id}')
-  sleep 0.3
+      set -l second (tmux split-window -v -t $left -p 50 -c $HOME -P -F '#{pane_id}')
+      sleep 0.3
 
-  set -l left_top (tmux display-message -p -t $left '#{pane_top}')
-  set -l second_top (tmux display-message -p -t $second '#{pane_top}')
+      set -l left_top (tmux display-message -p -t $left '#{pane_top}')
+      set -l second_top (tmux display-message -p -t $second '#{pane_top}')
 
-  set -l discordpane
-  set -l spotapane
-  if test $left_top -lt $second_top
-    set discordpane $left
-    set spotapane $second
-  else
-    set discordpane $second
-    set spotapane $left
-  end
+      set -l discordpane
+      set -l spotapane
+      if test $left_top -lt $second_top
+        set discordpane $left
+        set spotapane $second
+      else
+        set discordpane $second
+        set spotapane $left
+      end
 
-  tmux send-keys -t $discordpane 'discordo' Enter
-  tmux select-pane -t $discordpane -T discordo
-  tmux send-keys -t $spotapane 'spotatui' Enter
-  tmux select-pane -t $spotapane -T spotatui
+      tmux send-keys -t $discordpane 'discordo' Enter
+      tmux select-pane -t $discordpane -T discordo
+      tmux send-keys -t $spotapane 'spotatui' Enter
+      tmux select-pane -t $spotapane -T spotatui
 
-  if set -q TMUX
-    tmux switch-client -t suupa
-  else
-    tmux attach-session -t suupa
-  end
-'';
+      if set -q TMUX
+        tmux switch-client -t suupa
+      else
+        tmux attach-session -t suupa
+      end
+    '';
 
-ccc = ''
-  tmux kill-session -t ccc 2>/dev/null
-  tmux new-session -d -s ccc -c $HOME
+    ccc = ''
+      tmux kill-session -t ccc 2>/dev/null
+      tmux new-session -d -s ccc -c $HOME
 
-  set -l top (tmux display-message -p -t ccc '#{pane_id}')
-  set -l bottom (tmux split-window -v -t ccc -p 40 -c $HOME -P -F '#{pane_id}')
-  sleep 0.3
+      set -l top (tmux display-message -p -t ccc '#{pane_id}')
+      set -l bottom (tmux split-window -v -t ccc -p 40 -c $HOME -P -F '#{pane_id}')
+      sleep 0.3
 
-  tmux send-keys -t $top 'nvim ~/Documents/devsup/' Enter
-  tmux select-pane -t $top -T nvim
+      tmux send-keys -t $top 'nvim ~/Documents/devsup/' Enter
+      tmux select-pane -t $top -T nvim
 
-  tmux send-keys -t $bottom 'shiki' Enter
-  tmux select-pane -t $bottom -T shiki
+      tmux send-keys -t $bottom 'shiki' Enter
+      tmux select-pane -t $bottom -T shiki
 
-  if set -q TMUX
-    tmux switch-client -t ccc
-  else
-    tmux attach-session -t ccc
-  end
-'';
-};
+      if set -q TMUX
+        tmux switch-client -t ccc
+      else
+        tmux attach-session -t ccc
+      end
+    '';
+  };
 
   ############################################################
   # Hyprlock — screen lock
@@ -340,20 +417,24 @@ ccc = ''
   # Hyprland
   ############################################################
   wayland.windowManager.hyprland.plugins = [
-    #hyprglass
     pkgs.hyprlandPlugins.hyprglass
   ];
 
   wayland.windowManager.hyprland.settings = {
     exec-once = [
       "hyprpaper --wait -c ${config.home.homeDirectory}/.config/hypr/hyprpaper.conf"
+      "hyprctl setcursor retrosmart-black 24"
     ];
 
     env = [
+      "XCURSOR_THEME,retrosmart-black"
+      "XCURSOR_SIZE,20"
+      "HYPRCURSOR_THEME,retrosmart-black"
+      "HYPRCURSOR_SIZE,24"
       "AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1"
       "LIBVA_DRIVER_NAME,nvidia"
       "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-      "WLR_NO_HARDWARE_CURSORS,1"
+  #    "WLR_NO_HARDWARE_CURSORS,1"
       "NIXOS_OZONE_WL,1"
       "__EGL_VENDOR_LIBRARY_FILENAMES,/run/opengl-driver/share/glvnd/egl_vendor.d/50_nvidia.json"
       "OGL_FORCE_SOFTWARE,0"
@@ -370,38 +451,28 @@ ccc = ''
     ];
   };
 
-  # hyprpaper: preload/apply wallpaper on startup
-  #home.file.".config/hypr/hyprpaper.conf" = {
-  #  text = ''
-  #    preload = /home/suupatruupa/Pictures/Wallpapers/wallhaven-1qr6mg.png
-  #    wallpaper = eDP-1,/home/suupatruupa/Pictures/Wallpapers/wallhaven-1qr6mg.png
-  #    splash = false
-  #  '';
-  #};
+  home.file.".config/hypr/hyprland.lua" = {
+    text = let
+      hyprglass-pkg = pkgs.hyprlandPlugins.mkHyprlandPlugin {
+        pluginName = "hyprglass";
+        version = "unstable";
+        src = inputs.hyprglass;
+        hyprland = pkgs.hyprland;
+        meta = { };
+        installPhase = ''
+          mkdir -p $out/lib
+          cp hyprglass.so $out/lib/libhyprglass.so
+        '';
+      };
+    in ''
+      -- Dynamic store path built directly from source
+      hl.plugin.load("${hyprglass-pkg}/lib/libhyprglass.so")
 
-home.file.".config/hypr/hyprland.lua" = {
-  text = let
-    hyprglass-pkg = pkgs.hyprlandPlugins.mkHyprlandPlugin {
-      pluginName = "hyprglass";
-      version = "unstable";
-      src = inputs.hyprglass;
-      hyprland = pkgs.hyprland;
-      meta = { };
-      installPhase = ''
-        mkdir -p $out/lib
-        cp hyprglass.so $out/lib/libhyprglass.so
-      '';
-    };
-  in ''
-    -- Dynamic store path built directly from source
-    hl.plugin.load("${hyprglass-pkg}/lib/libhyprglass.so")
+      ${builtins.readFile ./.config/hypr/hyprland.lua}
+    '';
+  };
 
-    ${builtins.readFile ./.config/hypr/hyprland.lua}
-  '';
-};
-
-
-  # Wallpaper picker script (wofi-based dynamic switcher)
+  # Wallpaper picker script
   home.file.".config/hypr/scripts/wallpaper_picker.sh" = {
     text = ''
       #!/usr/bin/env bash
