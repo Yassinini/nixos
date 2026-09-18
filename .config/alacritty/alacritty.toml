@@ -1,0 +1,24 @@
+[window]
+# 1. Add inner padding so the text doesn't hit the edges
+padding = { x = 25, y = 25 }
+
+# 2. Hide the titlebar and window borders
+decorations = "None"
+
+# 3. Enable transparency (Hyprglass will apply the blur to this layer)
+opacity = 0.85
+
+# 4. Request the compositor to blur the background (fallback helper)
+blur = true
+
+[terminal.shell]
+program = "fish"
+
+
+[font]
+size = 10.0
+
+
+[general]
+live_config_reload = true
+import = ["~/.config/alacritty/colors.toml"]

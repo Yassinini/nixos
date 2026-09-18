@@ -1,0 +1,25 @@
+# =========================================================================
+# Core Wallust Engine Configuration
+# =========================================================================
+
+backend = "full"
+color_space = "lab"
+palette = "dark16"
+
+# =========================================================================
+# Wallust Templates Definition
+# =========================================================================
+
+[templates]
+
+# Kitty terminal colors
+kitty = { template = "kitty.conf", target = "~/.config/kitty/colors.conf" }
+
+# Rofi launcher (MAKE SURE THIS IS THE ONLY 'rofi' ENTRY)
+rofi = { template = "colors-rofi.rasi", target = "~/.cache/wallust/colors-rofi.rasi" }
+
+# Waybar top bar
+waybar = { template = "waybar-colors.css", target = "~/.config/waybar/colors.css" }
+
+# SwayNC notification center
+swaync = { template = "waybar-colors.css", target = "~/.config/swaync/colors.css" }

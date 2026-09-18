@@ -38,6 +38,7 @@ hyprglass = {
   outputs = { self, nixpkgs, home-manager, nix-flatpak, quickshell, spicetify-nix, helium-flake, fetch-3d, ... }@inputs:
     let
       system = "x86_64-linux";
+      username = "suupatruupa";
       pkgs = nixpkgs.legacyPackages.${system};
 
       hyprglass = pkgs.stdenv.mkDerivation {
@@ -94,9 +95,9 @@ hyprglass = {
         pname = "shiki-cli";
         version = "unstable-2026-08-08";
         src = inputs.shiki-src;
-        cargoHash = "sha256-1A4x/1cqpXR35bU2X6WpwPNt0uj9TSgQ3JJPZDBQPtw=";
+	cargoHash = "sha256-wIw2Vz12JwHXn1F+YupWQvYSVNO1yXtJVPQBL5Apmn4=";
         nativeBuildInputs = with pkgs; [ pkg-config ];
-        buildInputs = with pkgs; [ openssl ];
+        buildInputs = with pkgs; [ openssl glib gtk3 cairo pango gdk-pixbuf atk harfbuzz ];
         OPENSSL_NO_VENDOR = 1;
         meta = with pkgs.lib; {
           description = "TUI note-taking app in Rust, git-native notebooks";
@@ -106,7 +107,7 @@ hyprglass = {
         };
       };
 
-      retrosmart-cursors = pkgs.stdenv.mkDerivation rec {
+retrosmart-cursors = pkgs.stdenv.mkDerivation rec {
         pname = "retrosmart-x11-cursors";
         version = "unstable-2025-01-13";
         src = pkgs.fetchFromGitHub {
@@ -116,7 +117,11 @@ hyprglass = {
           sha256 = "sha256-X7F8DQt3BesAdL9nBjxEUY5O5LHAs9B2uKPzJsIfAUQ=";
         };
         nativeBuildInputs = with pkgs; [ imagemagick xcursorgen ];
+        preBuild = ''
+          mkdir -p retrosmart-bitmap-xcursor-dummy
+        '';
         installFlags = [ "DESTDIR=${placeholder "out"}" "PREFIX=" ];
+        enableParallelBuilding = false;
         meta = with pkgs.lib; {
           description = "Old-fashioned X11 cursor theme inspired by Windows 3.x and OS X";
           homepage = "https://github.com/mdomlop/retrosmart-x11-cursors";
@@ -159,7 +164,7 @@ hyprglass = {
     in
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors helium-flake gamemaker-fhs; };
+        specialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors helium-flake gamemaker-fhs username; };
         modules = [
           { nixpkgs.hostPlatform = system; }
           nix-flatpak.nixosModules.nix-flatpak
@@ -169,8 +174,8 @@ hyprglass = {
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors gamemaker-fhs; };
-            home-manager.users.suupatruupa = import ./home.nix;
+            home-manager.extraSpecialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors gamemaker-fhs username; };
+            home-manager.users.${username} = import ./home.nix;
           }
         ];
       };

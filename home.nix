@@ -1,10 +1,11 @@
-{ config, pkgs, inputs, hyprglass, shiki-cli, retrosmart-cursors, gamemaker-fhs,  ... }:
+{ config, pkgs, inputs, hyprglass, shiki-cli, retrosmart-cursors, gamemaker-fhs, username, ... }:
 let
   hyprglass-pkg = pkgs.hyprland.plugins.buildHyprlandPlugin {
     pluginName = "hyprglass";
     version = "unstable";
     src = inputs.hyprglass;
   };
+  dotfilesDir = "${config.home.homeDirectory}/.nixos";
 in
 {
 
@@ -12,8 +13,8 @@ in
   ############################################################
   # Core Home Manager Identity
   ############################################################
-  home.username = "suupatruupa";
-  home.homeDirectory = "/home/suupatruupa";
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
   home.stateVersion = "26.05";
 
   # Let home-manager manage itself
@@ -22,14 +23,15 @@ in
   ############################################################
   # Cursor Theme
   ############################################################
+  # Temporarily disabled — retrosmart-cursors fails to build (upstream Makefile bug)
   home.pointerCursor = {
-    enable = true;
-    gtk.enable = true;
-    x11.enable = true;
-    package = retrosmart-cursors;
-    name = "retrosmart-xcursor-black";
-    size = 34;
-  };
+     enable = true;
+     gtk.enable = true;
+     x11.enable = true;
+     package = retrosmart-cursors;
+     name = "retrosmart-xcursor-black";
+     size = 34;
+   };
 
   ############################################################
   # GTK / QT / Dark Mode Theming
@@ -82,7 +84,6 @@ in
     networkmanagerapplet
     nwg-look
     gum
-    shiki-cli
   pkgs.nvtopPackages.nvidia  
 
 
@@ -345,7 +346,7 @@ ccc = ''
 
   wayland.windowManager.hyprland.settings = {
     exec-once = [
-      "hyprpaper --wait -c /home/suupatruupa/.config/hypr/hyprpaper.conf"
+      "hyprpaper --wait -c ${config.home.homeDirectory}/.config/hypr/hyprpaper.conf"
     ];
 
     env = [
@@ -365,7 +366,7 @@ ccc = ''
       "SUPER, C, killactive"
       "SUPER, M, exit"
       "SUPER, L, exec, hyprlock"
-      "SUPER SHIFT, K, exec, /home/suupatruupa/.config/hypr/scripts/wallpaper_picker.sh"
+      "SUPER SHIFT, K, exec, ${config.home.homeDirectory}/.config/hypr/scripts/wallpaper_picker.sh"
     ];
   };
 
@@ -404,7 +405,7 @@ home.file.".config/hypr/hyprland.lua" = {
   home.file.".config/hypr/scripts/wallpaper_picker.sh" = {
     text = ''
       #!/usr/bin/env bash
-      DIR="/home/suupatruupa/Pictures/Wallpapers"
+      DIR="$HOME/Pictures/Wallpapers"
       WOFI="/run/current-system/sw/bin/wofi"
       NOTIFY="/run/current-system/sw/bin/notify-send"
 
@@ -442,26 +443,46 @@ home.file.".config/hypr/hyprland.lua" = {
   ############################################################
   # Local Scripts (live-editable symlinks)
   ############################################################
-  home.file.".local/bin/yurrr".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/local-bin/yurrr";
-  home.file.".local/bin/yeup".source  = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/local-bin/yeup";
-home.file.".local/bin/yayyy".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/local-bin/yayyy";
+  home.file.".local/bin/yurrr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/local-bin/yurrr";
+  home.file.".local/bin/yeup".source  = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/local-bin/yeup";
+  home.file.".local/bin/yayyy".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/local-bin/yayyy";
+
   ############################################################
   # Dotfiles (live-editable symlinks)
   ############################################################
   xdg.configFile = {
-    "tmux".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/tmux";
-    "fastfetch".source      = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/fastfetch";
-    "waybar".source         = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/waybar";
-    "rofi".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/rofi";
-    "wofi".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/wofi";
-    "kitty".source          = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/kitty";
-    "matugen".source        = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/matugen";
-    "spicetify".source      = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/spicetify";
-    "swaync".source         = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/swaync";
-    "spotify-player".source = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/spotify-player";
-    "glava".source          = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/glava";
-    "nvim".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/nvim";
-    "btop".source           = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/btop";
-    "sptlrx".source         = config.lib.file.mkOutOfStoreSymlink "/home/suupatruupa/.nixos/.config/sptlrx";
+    "tmux".source           = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/tmux";
+    "fastfetch".source      = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/fastfetch";
+    "waybar".source         = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/waybar";
+    "rofi".source           = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/rofi";
+    "wofi".source           = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/wofi";
+    "kitty".source          = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/kitty";
+    "matugen".source        = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/matugen";
+    "spicetify".source      = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/spicetify";
+    "swaync".source         = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/swaync";
+    "spotify-player".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/spotify-player";
+    "glava".source          = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/glava";
+    "nvim".source           = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/nvim";
+    "btop".source           = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/btop";
+    "sptlrx".source         = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/sptlrx";
+
+    "alacritty".source      = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/alacritty";
+    "wezterm".source        = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/wezterm";
+    "gh".source             = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/gh";
+    "github-copilot".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/github-copilot";
+    "xsettingsd".source     = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/xsettingsd";
+    "kdeconnect".source     = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/kdeconnect";
+    "quickshell".source     = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/quickshell";
+    "Vibeshell".source      = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/Vibeshell";
+    "tinted-theming".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/tinted-theming";
+    "wallust".source        = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/wallust";
+    "mpv".source            = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/mpv";
+    "obsidian".source       = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/obsidian";
+    "starship.toml".source  = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/starship.toml";
+    "fuzzel".source         = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/fuzzel";
+    "nwg-look".source       = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/nwg-look";
+    "superfile".source      = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/superfile";
+    "bluetuith".source      = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/bluetuith";
+    "croc".source           = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/.config/croc";
   };
 }

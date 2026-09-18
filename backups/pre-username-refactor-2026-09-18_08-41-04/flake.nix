@@ -1,0 +1,178 @@
+{
+  description = "NixOS Flake Configuration";
+
+  inputs = {
+    nixpkgs.url = "git+https://github.com/NixOS/nixpkgs.git?ref=nixos-unstable&shallow=1";
+
+    fetch-3d.url = "github:areofyl/fetch";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+hyprglass = {
+    url = "github:hyprnux/hyprglass";
+    flake = false;
+  };
+
+    shiki-src = {
+      url = "github:sazardev/shiki";
+      flake = false;
+    };
+
+    quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+
+    helium-flake = {
+      url = "github:oxcl/nix-flake-helium-browser";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    spicetify-nix = {
+      url = "git+https://github.com/Gerg-L/spicetify-nix.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, home-manager, nix-flatpak, quickshell, spicetify-nix, helium-flake, fetch-3d, ... }@inputs:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+
+      hyprglass = pkgs.stdenv.mkDerivation {
+        pname = "hyprglass";
+        version = "unstable-2026-08";
+        src = pkgs.fetchFromGitHub {
+          owner = "hyprnux";
+          repo = "hyprglass";
+          rev = "main";
+          hash = "sha256-x/584kY+XXlU/OWKtZAFo89VtowjLXs1DiP9PC0o0Os=";
+        };
+
+        nativeBuildInputs = with pkgs; [ pkg-config cpio gcc gnumake ];
+        dontUseCmakeConfigure = true;
+        dontUseMesonConfigure = true;
+        configurePhase = "true";
+        buildInputs = with pkgs; [
+          hyprland
+          hyprlang
+          hyprutils
+          hyprcursor
+          hyprgraphics
+          aquamarine
+          wayland
+          wayland-protocols
+          cairo
+          libxkbcommon
+          libinput
+          libdrm
+          pixman
+          libglvnd
+          libGL
+          mesa
+          libxcb-wm
+          libxcb-util
+          libxcb-render-util
+          libxcb-errors
+          libxcb
+          glslang
+          lua5_4
+          openssl
+        ];
+        OPENSSL_NO_VENDOR = 1;
+        buildPhase = ''
+          make
+        '';
+        installPhase = ''
+          mkdir -p $out/lib
+          cp hyprglass.so $out/lib/
+        '';
+      };
+
+      shiki-cli = pkgs.rustPlatform.buildRustPackage {
+        pname = "shiki-cli";
+        version = "unstable-2026-08-08";
+        src = inputs.shiki-src;
+        cargoHash = "sha256-1A4x/1cqpXR35bU2X6WpwPNt0uj9TSgQ3JJPZDBQPtw=";
+        nativeBuildInputs = with pkgs; [ pkg-config ];
+        buildInputs = with pkgs; [ openssl ];
+        OPENSSL_NO_VENDOR = 1;
+        meta = with pkgs.lib; {
+          description = "TUI note-taking app in Rust, git-native notebooks";
+          homepage = "https://github.com/sazardev/shiki";
+          license = licenses.mit;
+          mainProgram = "shiki";
+        };
+      };
+
+      retrosmart-cursors = pkgs.stdenv.mkDerivation rec {
+        pname = "retrosmart-x11-cursors";
+        version = "unstable-2025-01-13";
+        src = pkgs.fetchFromGitHub {
+          owner = "mdomlop";
+          repo = "retrosmart-x11-cursors";
+          rev = "master";
+          sha256 = "sha256-X7F8DQt3BesAdL9nBjxEUY5O5LHAs9B2uKPzJsIfAUQ=";
+        };
+        nativeBuildInputs = with pkgs; [ imagemagick xcursorgen ];
+        installFlags = [ "DESTDIR=${placeholder "out"}" "PREFIX=" ];
+        meta = with pkgs.lib; {
+          description = "Old-fashioned X11 cursor theme inspired by Windows 3.x and OS X";
+          homepage = "https://github.com/mdomlop/retrosmart-x11-cursors";
+          license = licenses.gpl3Only;
+          platforms = platforms.linux;
+        };
+      };
+
+      gamemaker-fhs = pkgs.buildFHSEnv {
+        name = "gamemaker-fhs";
+        targetPkgs = pkgs: with pkgs; [
+          mesa
+          libGL
+          libGLU
+          openal
+          curl
+          zlib
+          xorg.libXrandr
+          xorg.libXxf86vm
+          pulseaudio
+          ffmpeg
+          fuse
+          fuse3
+          glibc
+          openssl
+          icu
+          bzip2
+          libpng
+          brotli
+        ];
+        extraInstallCommands = ''
+          mkdir -p $out/usr/lib
+          ln -sf ${pkgs.bzip2.out}/lib/libbz2.so.1 $out/usr/lib/libbz2.so.1.0
+        '';
+        profile = ''
+          export LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
+        '';
+        runScript = "bash";
+      };
+    in
+    {
+      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors helium-flake gamemaker-fhs; };
+        modules = [
+          { nixpkgs.hostPlatform = system; }
+          nix-flatpak.nixosModules.nix-flatpak
+          ./configuration.nix
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs hyprglass shiki-cli retrosmart-cursors gamemaker-fhs; };
+            home-manager.users.suupatruupa = import ./home.nix;
+          }
+        ];
+      };
+    };
+}

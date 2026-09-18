@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{ config, pkgs, inputs, hyprglass, ... }:
+{ config, pkgs, inputs, hyprglass, username, ... }:
 
 
 
@@ -86,7 +86,7 @@ nixpkgs.config.allowUnfree = true;
     backupFileExtension = "backup";
     extraSpecialArgs = { inherit inputs hyprglass; };
 
-    users.suupatruupa = { pkgs, ... }: {
+    users.${username} = { pkgs, ... }: {
       imports = [
         # Spicetify HM module
         inputs.spicetify-nix.homeManagerModules.default
@@ -129,9 +129,9 @@ nixpkgs.config.allowUnfree = true;
   ############################################################
   # User Accounts
   ############################################################
-  users.users."suupatruupa" = {
+  users.users.${username} = {
     isNormalUser = true;
-    description = "suupatruupa";
+    description = username;
     extraGroups = [ "networkmanager" "wheel" "bluetooth" "video" "audio" ];
   };
 
@@ -351,7 +351,6 @@ xdg.portal = {
     steam
     prismlauncher
     mpvpaper
-    davinci-resolve
     localsend
     croc
     spotify-player
