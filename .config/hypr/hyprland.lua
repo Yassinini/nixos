@@ -57,7 +57,6 @@ local fileManager = "dolphin"
 local menu        = "hyprlauncher"
 
 
-
 -- =========================================================================
 -- 1. HYPRGLASS PLUGIN SETUP (Top-level scope: re-evaluates on hyprctl reload)
 -- =========================================================================
@@ -140,7 +139,7 @@ glass_opacity = 0.92,
   -- 2. Apply Global Plugin Config
   hg.config({
     default_theme = "dark",
-    default_preset = "liner",
+    default_preset = "mefr",
     layers = { enabled = 1 },
     dark = { brightness = 0.85, contrast = 1.1 },
   })

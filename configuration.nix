@@ -426,6 +426,9 @@ xdg.portal = {
 
 spyder-isolated
 uv
+cbonsai
+
+
 #myappshere
   ];
 
@@ -483,7 +486,7 @@ boot.supportedFilesystems = [ "ntfs" ];
     dynamicBoost.enable = true;
   };
 hardware.nvidia.prime = {
-  offload.enable = true;  # or sync.enable, depending on your use case
+  sync.enable = true;
   intelBusId = "PCI:0:2:0";  # from lspci
   nvidiaBusId = "PCI:1:0:0"; # from lspci
 };
