@@ -136,14 +136,14 @@ glass_opacity = 0.92,
   },
 })
 hg.preset("terminal_dark", {
-  glass_opacity = 0.88,
+  glass_opacity = 1.2,
 
   -- Smooth, even blur — clean readable backdrop
-  blur_strength = 1.0,
-  blur_iterations = 6,
+  blur_strength = 1.3,
+  blur_iterations = 5,
 
   -- Neutral dark tint (~#121212 at ~15% opacity)
-  tint_color = 0x1212121F,
+  --tint_color = 0x1212121F,
 
   -- Minimal optics — keep text/UI crisp, no distortion artifacts
   refraction_strength = 0.02,
@@ -411,11 +411,11 @@ hl.config({
 
     decoration = {
         -- 2. Bump up rounding for those smooth, bubbly card corners
-        rounding       = 16,
+        rounding       = 8,
         rounding_power = 2,
 
         active_opacity   = 1.0,
-        inactive_opacity = 1.0,
+        inactive_opacity = 0.8,
 
         -- 3. Enhance the shadow parameters to make the floating window pop
         shadow = {
