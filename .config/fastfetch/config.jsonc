@@ -8,8 +8,8 @@
     "position": "right",
     "padding": {
       "top": 2,
-      "right": 6,
-      "left": 2
+      "right": 10,
+      "left": 10
     }
   },
   "display": {

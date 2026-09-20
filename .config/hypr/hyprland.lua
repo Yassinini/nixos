@@ -135,11 +135,34 @@ glass_opacity = 0.92,
     saturation = 1.25,          -- Boosted color vibrancy
   },
 })
+hg.preset("terminal_dark", {
+  glass_opacity = 0.88,
 
+  -- Smooth, even blur — clean readable backdrop
+  blur_strength = 1.0,
+  blur_iterations = 6,
+
+  -- Neutral dark tint (~#121212 at ~15% opacity)
+  tint_color = 0x1212121F,
+
+  -- Minimal optics — keep text/UI crisp, no distortion artifacts
+  refraction_strength = 0.02,
+  chromatic_aberration = 0.05,
+  fresnel_strength = 0.15,
+  specular_strength = 0.08,
+  lens_distortion = 0,
+
+  -- Slightly dimmed, low-contrast backdrop so foreground pops
+  dark = {
+    brightness = 0.9,
+    contrast = 1.05,
+    saturation = 0.95,
+  },
+})
   -- 2. Apply Global Plugin Config
   hg.config({
     default_theme = "dark",
-    default_preset = "mefr",
+    default_preset = "terminal_dark",
     layers = { enabled = 1 },
     dark = { brightness = 0.85, contrast = 1.1 },
   })
