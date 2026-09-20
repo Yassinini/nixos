@@ -414,9 +414,21 @@ xdg.portal = {
     # Fonts & Icons
     papirus-icon-theme
     nerd-fonts.jetbrains-mono
+    nerd-fonts.iosevka
     nerd-fonts.symbols-only
     material-design-icons
     commit-mono
+
+    (pkgs.stdenvNoCC.mkDerivation {
+      pname = "waybar-custom-fonts";
+      version = "1.0";
+      dontUnpack = true;
+      installPhase = ''
+        mkdir -p $out/share/fonts/truetype
+        cp ${./waybar/fonts/Waycat.ttf} $out/share/fonts/truetype/
+        cp ${./waybar/fonts/Skulltype.ttf} $out/share/fonts/truetype/
+      '';
+    })
 
     # Qt Environment
     qt6.qtsvg
@@ -454,9 +466,10 @@ boot.supportedFilesystems = [ "ntfs" ];
   # Fonts
   ############################################################
   fonts.fontconfig.defaultFonts = {
-    serif = [ "JetBrainsMono Nerd Font" ];
-    sansSerif = [ "JetBrainsMono Nerd Font" ];
-    monospace = [ "JetBrainsMono Nerd Font" ];
+    serif = [ "Iosevka Nerd Font" ];
+    sansSerif = [ "Iosevka Nerd Font" ];
+    monospace = [ "Iosevka Nerd Font" ];
+# JetBrainsMono Nerd Font 
   };
 
   ############################################################

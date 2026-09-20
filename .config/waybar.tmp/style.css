@@ -64,3 +64,21 @@ window#waybar {
     background-color: @surface_container;
     color: @foreground;
 }
+
+#custom-cpucat {
+  font-family: "Waycat", monospace;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  padding-left: 5px;
+  padding-right: 8px;
+}
+
+#custom-skull {
+  font-family: "Skulltype", monospace;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  padding-left: 5px;
+  padding-right: 8px;
+}

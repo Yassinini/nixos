@@ -168,8 +168,8 @@ home.pointerCursor = {
     appimage-run
     linuxdeploy
     concord-tui
+    bc
   ];
-
   programs.btop = {
     enable = true;
   };
