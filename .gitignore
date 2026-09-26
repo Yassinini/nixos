@@ -3,3 +3,10 @@ config/spotify-player/*cache*
 config/spicetify/*cache*
 result
 result-*
+
+# Local / generated files
+backups/
+retrosmart-build.log
+config-audit.txt
+test
+ystemctl --user status graphical-session.target graphical-session-pre.target
