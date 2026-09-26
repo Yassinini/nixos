@@ -12,6 +12,12 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+plasma-manager = {
+  url = "github:pjones/plasma-manager";
+  inputs.home-manager.follows = "home-manager";
+  inputs.nixpkgs.follows = "nixpkgs";
+};
+
 hyprglass = {
     url = "github:hyprnux/hyprglass";
     flake = false;

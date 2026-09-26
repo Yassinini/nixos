@@ -133,7 +133,7 @@ nixpkgs.config.allowUnfree = true;
     isNormalUser = true;
     description = username;
     extraGroups = [ "networkmanager" "wheel" "bluetooth" "video" "audio" ];
-  };
+};
 
   programs.fish.enable = true;
 
@@ -163,12 +163,12 @@ boot.loader.systemd-boot.enable = false;
     device = "nodev";
     useOSProber = true;
     configurationLimit = 5; # Keeps only the last 5 generations in /boot
-    theme = "${pkgs.fetchFromGitHub {
-      owner = "harishnkr";
-      repo = "bsol";
+    theme = pkgs.fetchFromGitHub {
+      owner = "Jacksaur";
+      repo = "CRT-Amber-GRUB-Theme";
       rev = "master";
-      sha256 = "1nhazccsp71lxjyw15lns2gpch182j66d54qw8spzlniv5yk4gvj";
-    }}/bsol";
+  sha256 = "sha256-ATm0b9e3Qcv42E5CQYB7Umc8NpWw90QdjJmArOKbmaY=";
+    };
   };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = [ "acpi_backlight=video" ];
@@ -194,12 +194,10 @@ boot.loader.systemd-boot.enable = false;
     LC_TIME = "en_US.UTF-8";
   };
 
-  ############################################################
+############################################################
   # Display Manager, X11 & Hyprland
   ############################################################
   services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
 
   services.xserver.xkb = {
     layout = "us";
@@ -210,7 +208,7 @@ boot.loader.systemd-boot.enable = false;
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --asterisks --cmd start-hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --asterisks";
         user = "greeter";
       };
     };
@@ -231,21 +229,22 @@ boot.loader.systemd-boot.enable = false;
     xwayland.enable = true;
   };
 
-xdg.portal = {
-  enable = true;
-  extraPortals = [
-    pkgs.xdg-desktop-portal-gtk
-    pkgs.xdg-desktop-portal-hyprland
-  ];
-  config = {
-    common.default = [ "hyprland" "gtk" ];
-    hyprland = {
-      default = [ "hyprland" "gtk" ];
-      "org.freedesktop.impl.portal.ScreenCast" = "hyprland";
-      "org.freedesktop.impl.portal.Screenshot" = "hyprland";
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-hyprland
+    ];
+    config = {
+      common.default = [ "hyprland" "gtk" ];
+      hyprland = {
+        default = [ "hyprland" "gtk" ];
+        "org.freedesktop.impl.portal.ScreenCast" = "hyprland";
+        "org.freedesktop.impl.portal.Screenshot" = "hyprland";
+      };
     };
   };
-};
 
   ############################################################
   # Printing & Audio
@@ -442,7 +441,7 @@ cbonsai
 
 
 #myappshere
-  ];
+  ]++ config.services.displayManager.sessionPackages;
 
 
 programs.zoom-us.enable = true;
@@ -551,6 +550,8 @@ hardware.nvidia.prime = {
     NIXOS_OZONE_WL = "1";
     __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
   };
+
+environment.pathsToLink = [ "/share/wayland-sessions" "/share/xsessions" ];
 
   ############################################################
   # Nix-LD Binary Compatibility Layer
